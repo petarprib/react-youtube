@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 
 export default class VideoItem extends Component {
     render() {
-        const { video, videoStats } = this.props;
+        const { video } = this.props;
 
-        // console.log(videoStats);
         return (
             <div onClick={() => this.props.handleVideoSelect(video)}>
-                <h4>{video.snippet.title}</h4>
+                <h4>{video.title}</h4>
                 <img
-                    src={video.snippet.thumbnails.medium.url}
-                    alt={`${video.id.videoId}`}
+                    src={video.thumbnailMedium}
+                    alt={`${video.id}`}
                 />
-                {/* <p>{videoStats.items[0].statistics.viewCount}</p> */}
+                <p>{video.viewCount}</p>
             </div>
         );
     }
