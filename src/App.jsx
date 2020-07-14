@@ -65,32 +65,33 @@ export default class App extends Component {
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
 
     const RELATED_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${video.id}&type=video&order=relevance&maxResults=3&key=${API_KEY2}`;
-    let selectedVideo;
 
     fetch(RELATED_URL)
       .then(response => response.json())
       .then(data => {
-        selectedVideo = { ...video, relatedVideos: data.items } // samo zelim provuc data.items u fetchVideosStats
-        // console.log(selectedVideo)
-        this.setState({ selectedVideo });
+        this.setState({ selectedVideo: video });
+        this.fetchVideosStats(data.items);
       });
   }
 
   render() {
-    let videos = this.state.selectedVideo ?
-      <VideoDetails
-        selectedVideo={this.state.selectedVideo}
-        handleVideoSelect={this.handleVideoSelect}
-      /> :
-      <VideoList
-        videosData={this.state.videosData}
-        handleVideoSelect={this.handleVideoSelect}
-      />
+    let selectedVideo;
+    if (this.state.selectedVideo) {
+      selectedVideo =
+        <VideoDetails
+          selectedVideo={this.state.selectedVideo}
+          handleVideoSelect={this.handleVideoSelect}
+        />
+    }
 
     return (
       <div>
         <SearchBar handleSearch={this.handleSearch} />
-        {videos}
+        {selectedVideo}
+        <VideoList
+          videosData={this.state.videosData}
+          handleVideoSelect={this.handleVideoSelect}
+        />
       </div>
     );
   }
