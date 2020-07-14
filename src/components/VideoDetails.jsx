@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import RelatedVideos from './RelatedVideos';
 
 export default class VideoDetails extends Component {
     render() {
         let { selectedVideo } = this.props;
+        
         return (
             <div>
                 <iframe
@@ -14,11 +16,13 @@ export default class VideoDetails extends Component {
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                 ></iframe>
-                <h1>
-                    {selectedVideo.title}
-                </h1>
+                <h1>{selectedVideo.title}</h1>
                 <p>{selectedVideo.description}</p>
                 <p>{selectedVideo.publishedAt}</p>
+                <RelatedVideos
+                    relatedVideos={selectedVideo.relatedVideos}
+                    handleVideoSelect={this.props.handleVideoSelect}
+                />
             </div>
         );
     }
