@@ -3,21 +3,36 @@ import SearchBar from './components/SearchBar';
 import VideoList from './components/VideoList';
 import VideoDetails from './components/VideoDetails';
 
+// menu lateral, guardar likes, historial de busqueda y cuando se hizo (libreria moment), coger los primeros 2 videos de las ultimas 5 busquedas
+
 // const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
 const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
+
+// const DEPLOYMENT = true;
 
 // HIDE THE API KEY
 
 export default class App extends Component {
-  state = {
-    videosData: [],
-    selectedVideo: null,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      videosData: [],
+      selectedVideo: null
+    }
+
+    // cargar aqui videos recomendados del homepage
+    // if deployment true cargar recomendados de json local
   }
 
+
+  // state = {
+  //   videosData: [],
+  //   selectedVideo: null
+  // }
+
   handleSearch = (searchTerm) => {
-
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
-
     this.setState({ selectedVideo: null });
 
     const MODIFIED_SEARCH = searchTerm.replace(/ /g, "+");
@@ -61,17 +76,16 @@ export default class App extends Component {
   }
 
   handleVideoSelect = (video) => {
-
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
-
     const RELATED_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${video.id}&type=video&order=relevance&maxResults=3&key=${API_KEY2}`;
 
     fetch(RELATED_URL)
       .then(response => response.json())
       .then(data => {
-        this.setState({ selectedVideo: video });
         this.fetchVideosStats(data.items);
       });
+
+    this.setState({ selectedVideo: video });
   }
 
   render() {
