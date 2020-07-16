@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import Form from 'react-bootstrap/Form';
-// import Button from 'react-bootstrap/Button';
+import { Form, Button } from 'react-bootstrap';
 
 export default class SearchBar extends Component {
     state = {
@@ -18,23 +17,23 @@ export default class SearchBar extends Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input
-                    onChange={this.handleChange}
-                    value={this.state.searchTerm}
-                />
-                <button>Search</button>
-            </form>
+            // <form onSubmit={this.handleSubmit}>
+            //     <input
+            //         onChange={this.handleChange}
+            //         value={this.state.searchTerm}
+            //     />
+            //     <button>Search</button>
+            // </form>
 
-            // <Form onSubmit={this.handleSubmit}>
-            //     <Form.Group>
-            //         <Form.Control
-            //             onChange={this.handleChange}
-            //             value={this.state.searchTerm}
-            //         />
-            //     </Form.Group>
-            //     <Button>Search</Button>
-            // </Form>
+            <Form onSubmit={this.handleSubmit}>
+                <Form.Group>
+                    <Form.Control
+                        onChange={this.handleChange}
+                        value={this.state.searchTerm}
+                    />
+                </Form.Group>
+                <Button variant="primary">Search</Button>
+            </Form>
         );
     }
 }
