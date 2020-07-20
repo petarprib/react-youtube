@@ -145,9 +145,7 @@ export default class App extends Component {
       }
 
       if (likedIndex !== undefined) {
-        newLikedVideos.splice(likedIndex, 1);
-        localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
-        this.setState({ likedVideos: newLikedVideos });
+        this.removeLike(selectedVideo);
       } else {
         newLikedVideos.push(selectedVideo);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
@@ -183,7 +181,7 @@ export default class App extends Component {
       this.setState({ dislikedVideos: newDislikedVideos });
 
       if (likedVideos.length) {
-        this.removeLike(selectedVideo)
+        this.removeLike(selectedVideo);
       }
     } else {
       let dislikedIndex;
@@ -196,9 +194,7 @@ export default class App extends Component {
       }
 
       if (dislikedIndex !== undefined) {
-        newDislikedVideos.splice(dislikedIndex, 1);
-        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
-        this.setState({ dislikedVideos: newDislikedVideos });
+        this.removeDislike(selectedVideo)
       } else {
         newDislikedVideos.push(selectedVideo);
         localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
