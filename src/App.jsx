@@ -28,17 +28,20 @@ export default class App extends Component {
       this.state = {
         videosData: videos.videos,
         selectedVideo: null,
-        likedVideos: []
+        likedVideos: [],
+        dislikedVideos: []
       }
     } else {
       this.state = {
         videosData: [],
         selectedVideo: null,
-        likedVideos: []
+        likedVideos: [],
+        dislikedVideos: []
       }
     }
 
     this.state.likedVideos = JSON.parse(localStorage.getItem("likedVideos") || "[]");
+    this.state.dislikedVideos = JSON.parse(localStorage.getItem("dislikedVideos") || "[]");
 
     // cargar aqui videos recomendados del homepage
     // if deployment true cargar recomendados de json local
@@ -118,13 +121,19 @@ export default class App extends Component {
   }
 
   handleLike = (selectedVideo) => {
-    let { likedVideos } = this.state;
+    let { likedVideos, dislikedVideos } = this.state;
     let newLikedVideos = this.state.likedVideos;
+
+
 
     if (!likedVideos.length) {
       newLikedVideos.push(selectedVideo);
       localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
       this.setState({ likedVideos: newLikedVideos });
+
+      if (dislikedVideos.length) {
+        this.removeDislike(selectedVideo)
+      }
     } else {
       let likedIndex;
 
@@ -143,20 +152,90 @@ export default class App extends Component {
         newLikedVideos.push(selectedVideo);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
         this.setState({ likedVideos: newLikedVideos });
+
+        if (dislikedVideos.length) {
+          this.removeDislike(selectedVideo)
+        }
+      }
+    }
+  }
+
+  removeDislike = (selectedVideo) => {
+    let { dislikedVideos } = this.state;
+    let newDislikedVideos = this.state.dislikedVideos;
+
+    for (let i = 0; i < dislikedVideos.length; i++) {
+      if (dislikedVideos[i].id === selectedVideo.id) {
+        newDislikedVideos.splice(i, 1);
+        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
+        this.setState({ dislikedVideos: newDislikedVideos });
+      }
+    }
+  }
+
+  handleDislike = (selectedVideo) => {
+    let { dislikedVideos, likedVideos } = this.state;
+    let newDislikedVideos = this.state.dislikedVideos;
+
+    if (!dislikedVideos.length) {
+      newDislikedVideos.push(selectedVideo);
+      localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
+      this.setState({ dislikedVideos: newDislikedVideos });
+
+      if (likedVideos.length) {
+        this.removeLike(selectedVideo)
+      }
+    } else {
+      let dislikedIndex;
+
+      for (let i = 0; i < dislikedVideos.length; i++) {
+        if (dislikedVideos[i].id === selectedVideo.id) {
+          dislikedIndex = i;
+          break;
+        }
       }
 
+      if (dislikedIndex !== undefined) {
+        newDislikedVideos.splice(dislikedIndex, 1);
+        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
+        this.setState({ dislikedVideos: newDislikedVideos });
+      } else {
+        newDislikedVideos.push(selectedVideo);
+        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
+        this.setState({ dislikedVideos: newDislikedVideos });
+
+        if (likedVideos.length) {
+          this.removeLike(selectedVideo)
+        }
+      }
+    }
+  }
+
+  removeLike = (selectedVideo) => {
+    let { likedVideos } = this.state;
+    let newLikedVideos = this.state.likedVideos;
+
+    for (let i = 0; i < likedVideos.length; i++) {
+      if (likedVideos[i].id === selectedVideo.id) {
+        newLikedVideos.splice(i, 1);
+        localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
+        this.setState({ likedVideos: newLikedVideos });
+      }
     }
   }
 
   render() {
     let selectedVideo;
+
     if (this.state.selectedVideo) {
       selectedVideo =
         <VideoDetails
           selectedVideo={this.state.selectedVideo}
           likedVideos={this.state.likedVideos}
+          dislikedVideos={this.state.dislikedVideos}
           handleVideoSelect={this.handleVideoSelect}
           handleLike={this.handleLike}
+          handleDislike={this.handleDislike}
         />
     }
 

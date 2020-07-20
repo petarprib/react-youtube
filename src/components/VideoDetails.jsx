@@ -2,15 +2,26 @@ import React, { Component } from 'react';
 
 export default class VideoDetails extends Component {
     render() {
-        let { selectedVideo, likedVideos } = this.props;
+        let { selectedVideo, likedVideos, dislikedVideos } = this.props;
 
         let likeCount = parseInt(selectedVideo.likeCount);
         let likeColor = "initial";
+        let dislikeCount = parseInt(selectedVideo.dislikeCount)
+        let dislikeColor = "initial";
 
         for (let i = 0; i < likedVideos.length; i++) {
             if (selectedVideo.id === likedVideos[i].id) {
                 likeCount += 1;
-                likeColor = "green";
+                likeColor = "#008000";
+                break;
+            }
+        }
+
+        for (let i = 0; i < dislikedVideos.length; i++) {
+            if (selectedVideo.id === dislikedVideos[i].id) {
+                dislikeCount += 1;
+                dislikeColor = "#FF0000";
+                break;
             }
         }
 
@@ -27,15 +38,19 @@ export default class VideoDetails extends Component {
                 ></iframe>
                 <h3>{selectedVideo.title}</h3>
                 <i
-                    className="fas fa-thumbs-up thumbsup"
+                    className="fas fa-thumbs-up"
                     style={{ color: likeColor }}
                     onClick={() => this.props.handleLike(selectedVideo)}
                 ></i>
                 <p>{likeCount}</p>
-                <i className="fas fa-thumbs-down"></i>
-                <p>{selectedVideo.dislikeCount}</p>
+                <i
+                    className="fas fa-thumbs-down"
+                    style={{ color: dislikeColor }}
+                    onClick={() => this.props.handleDislike(selectedVideo)}
+                ></i>
+                <p>{dislikeCount}</p>
                 <p>{selectedVideo.description}</p>
-            </div>
+            </div >
         );
     }
 }
