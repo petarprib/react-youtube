@@ -3,16 +3,16 @@ import LikedVideosItem from './LikedVideosItem';
 
 export default class LikedVideos extends Component {
     render() {
-        let likedVideos = JSON.parse(localStorage.getItem("likedVideos") || "[]");
+        let { likedVideos } = this.props;
 
         if (!likedVideos.length) {
             return <p>You have not liked any videos</p>
         } else {
-            likedVideos = likedVideos.reverse().map((video, i) => {
+            let likedVideos = likedVideos.reverse().map((video, i) => {
                 return (
                     <LikedVideosItem
-                        video={video}
                         key={i}
+                        video={video}
                     />
                 );
             });

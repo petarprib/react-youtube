@@ -7,7 +7,7 @@ export default class Sidebar extends Component {
             <Navbar>
                 <Nav>
                     <Nav.Link href="/liked-videos">Liked videos</Nav.Link>
-                    <Nav.Link href="#">Search history</Nav.Link>
+                    <Nav.Link href="/search-history">Search history</Nav.Link>
                 </Nav>
             </Navbar>
 

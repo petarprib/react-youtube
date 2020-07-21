@@ -4,12 +4,15 @@ import SearchBar from './components/SearchBar';
 import VideoList from './components/VideoList';
 import VideoDetails from './components/VideoDetails';
 import LikedVideosList from './components/LikedVideosList';
+import SearchHistoryList from './components/SearchHistoryList';
 import { Image } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
   Route
 } from "react-router-dom";
 import videos from './videos.json';
+import moment from 'moment';
+import 'moment-timezone';
 
 const DEPLOYMENT = true;
 
@@ -29,25 +32,33 @@ export default class App extends Component {
         videosData: videos.videos,
         selectedVideo: null,
         likedVideos: [],
-        dislikedVideos: []
+        dislikedVideos: [],
+        searchHistory: []
       }
     } else {
       this.state = {
         videosData: [],
         selectedVideo: null,
         likedVideos: [],
-        dislikedVideos: []
+        dislikedVideos: [],
+        searchHistory: []
       }
     }
 
     this.state.likedVideos = JSON.parse(localStorage.getItem("likedVideos") || "[]");
     this.state.dislikedVideos = JSON.parse(localStorage.getItem("dislikedVideos") || "[]");
+    this.state.searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
 
     // cargar aqui videos recomendados del homepage
     // if deployment true cargar recomendados de json local
   }
 
   handleSearch = (searchTerm) => {
+    let newSearchHistory = this.state.searchHistory;
+    newSearchHistory.push({ searchTerm, time: moment().format() });
+    localStorage.setItem("searchHistory", JSON.stringify(newSearchHistory));
+    this.setState({ searchHistory: newSearchHistory });
+
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
     this.setState({ selectedVideo: null });
 
@@ -63,21 +74,9 @@ export default class App extends Component {
 
   fetchVideosStats = (videos) => {
     let videosData = [];
-    // let likedVideos = JSON.parse(localStorage.getItem("likedVideos"));
 
     videos.forEach(video => {
       const STATS_URL = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY2}`;
-
-      // let liked = false;
-
-      // if (likedVideos !== null) {
-      //   for (let i = 0; i < likedVideos.length; i++) {
-      //     if (video.id.videoId === likedVideos[i].id) {
-      //       liked = true;
-      //       break;
-      //     }
-      //   }
-      // }
 
       fetch(STATS_URL)
         .then(response => response.json())
@@ -93,9 +92,7 @@ export default class App extends Component {
             duration: data.items[0].contentDetails.duration,
             viewCount: data.items[0].statistics.viewCount,
             likeCount: data.items[0].statistics.likeCount,
-            dislikeCount: data.items[0].statistics.dislikeCount,
-            // 'liked: liked' only works when DEPLOYMENT === false
-            // liked: liked
+            dislikeCount: data.items[0].statistics.dislikeCount
           });
 
           if (videosData.length === videos.length) {
@@ -123,8 +120,6 @@ export default class App extends Component {
   handleLike = (selectedVideo) => {
     let { likedVideos, dislikedVideos } = this.state;
     let newLikedVideos = this.state.likedVideos;
-
-
 
     if (!likedVideos.length) {
       newLikedVideos.push(selectedVideo);
@@ -154,19 +149,6 @@ export default class App extends Component {
         if (dislikedVideos.length) {
           this.removeDislike(selectedVideo)
         }
-      }
-    }
-  }
-
-  removeDislike = (selectedVideo) => {
-    let { dislikedVideos } = this.state;
-    let newDislikedVideos = this.state.dislikedVideos;
-
-    for (let i = 0; i < dislikedVideos.length; i++) {
-      if (dislikedVideos[i].id === selectedVideo.id) {
-        newDislikedVideos.splice(i, 1);
-        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
-        this.setState({ dislikedVideos: newDislikedVideos });
       }
     }
   }
@@ -220,6 +202,19 @@ export default class App extends Component {
     }
   }
 
+  removeDislike = (selectedVideo) => {
+    let { dislikedVideos } = this.state;
+    let newDislikedVideos = this.state.dislikedVideos;
+
+    for (let i = 0; i < dislikedVideos.length; i++) {
+      if (dislikedVideos[i].id === selectedVideo.id) {
+        newDislikedVideos.splice(i, 1);
+        localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
+        this.setState({ dislikedVideos: newDislikedVideos });
+      }
+    }
+  }
+
   render() {
     let selectedVideo;
 
@@ -240,7 +235,14 @@ export default class App extends Component {
         <Sidebar />
         <a href="http://localhost:3000/"><Image src="yt_logo.svg" className="ytlogo" /></a>
         <Router>
-          <Route path="/liked-videos" component={LikedVideosList} />
+          <Route
+            path="/liked-videos"
+            component={() => <LikedVideosList likedVideos={this.state.likedVideos} />}
+          />
+          <Route
+            path="/search-history"
+            component={() => <SearchHistoryList searchHistory={this.state.searchHistory} />}
+          />
         </Router>
         <SearchBar handleSearch={this.handleSearch} />
         {selectedVideo}

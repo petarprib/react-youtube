@@ -6,7 +6,7 @@ export default class VideoDetails extends Component {
 
         let likeCount = parseInt(selectedVideo.likeCount);
         let likeColor = "initial";
-        let dislikeCount = parseInt(selectedVideo.dislikeCount)
+        let dislikeCount = parseInt(selectedVideo.dislikeCount);
         let dislikeColor = "initial";
 
         for (let i = 0; i < likedVideos.length; i++) {
@@ -50,7 +50,7 @@ export default class VideoDetails extends Component {
                 ></i>
                 <p>{dislikeCount}</p>
                 <p>{selectedVideo.description}</p>
-            </div >
+            </div>
         );
     }
 }
