@@ -5,6 +5,7 @@ import VideoList from './components/VideoList';
 import VideoDetails from './components/VideoDetails';
 import LikedVideosList from './components/LikedVideosList';
 import SearchHistoryList from './components/SearchHistoryList';
+import RecommVideosList from './components/RecommVideosList';
 import { Image } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
@@ -14,7 +15,7 @@ import videos from './videos.json';
 import moment from 'moment';
 import 'moment-timezone';
 
-const DEPLOYMENT = true;
+const DEPLOYMENT = false;
 
 // menu lateral, guardar likes, historial de busqueda y cuando se hizo (libreria moment), coger los primeros 2 videos de las ultimas 5 busquedas
 
@@ -33,7 +34,8 @@ export default class App extends Component {
         selectedVideo: null,
         likedVideos: [],
         dislikedVideos: [],
-        searchHistory: []
+        searchHistory: [],
+        recommendedVideos: []
       }
     } else {
       this.state = {
@@ -41,13 +43,18 @@ export default class App extends Component {
         selectedVideo: null,
         likedVideos: [],
         dislikedVideos: [],
-        searchHistory: []
+        searchHistory: [],
+        recommendedVideos: []
       }
     }
 
     this.state.likedVideos = JSON.parse(localStorage.getItem("likedVideos") || "[]");
     this.state.dislikedVideos = JSON.parse(localStorage.getItem("dislikedVideos") || "[]");
     this.state.searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
+    let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
+    if (recommendedVideos.length === 10) {
+      this.state.recommendedVideos = recommendedVideos;
+    }
 
     // cargar aqui videos recomendados del homepage
     // if deployment true cargar recomendados de json local
@@ -55,7 +62,10 @@ export default class App extends Component {
 
   handleSearch = (searchTerm) => {
     let newSearchHistory = this.state.searchHistory;
-    newSearchHistory.push({ searchTerm, time: moment().format() });
+    newSearchHistory.push({
+      searchTerm,
+      time: moment().format()
+    });
     localStorage.setItem("searchHistory", JSON.stringify(newSearchHistory));
     this.setState({ searchHistory: newSearchHistory });
 
@@ -94,6 +104,15 @@ export default class App extends Component {
             likeCount: data.items[0].statistics.likeCount,
             dislikeCount: data.items[0].statistics.dislikeCount
           });
+
+          if (videosData.length === 2) {
+            let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]")
+            if (recommendedVideos.length === 10) {
+              recommendedVideos.splice(0, 2);
+            }
+            recommendedVideos.push(...videosData);
+            localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
+          }
 
           if (videosData.length === videos.length) {
             this.setState({ videosData });
@@ -245,9 +264,14 @@ export default class App extends Component {
           />
         </Router>
         <SearchBar handleSearch={this.handleSearch} />
+        <RecommVideosList
+          recommendedVideos={this.state.recommendedVideos}
+          handleVideoSelect={this.handleVideoSelect}
+        />
         {selectedVideo}
         <VideoList
           videosData={this.state.videosData}
+          selectedVideo={this.state.selectedVideo}
           handleVideoSelect={this.handleVideoSelect}
         />
       </div>

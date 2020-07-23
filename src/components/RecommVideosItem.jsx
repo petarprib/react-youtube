@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-export default class VideoItem extends Component {
+export default class RecommVideosItem extends Component {
     render() {
         let { video } = this.props;
 
@@ -13,6 +13,6 @@ export default class VideoItem extends Component {
                 />
                 <p>{video.viewCount}</p>
             </div>
-        );
+        )
     }
 }

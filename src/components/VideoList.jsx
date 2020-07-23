@@ -13,10 +13,27 @@ export default class VideoList extends Component {
             );
         })
 
+        // if (this.props.selectedVideo === null) {
+        //     return (
+        //         <div>
+        //             <h1>Search results</h1>
+        //             {videoItems}
+        //         </div>
+        //     );
+        // } else {
+        //     return (
+        //         <div>
+        //             <h1>Related videos</h1>
+        //             {videoItems}
+        //         </div>
+        //     );
+        // }
+
         return (
             <div>
+                {this.props.selectedVideo === null ? <h1>Search results</h1> : <h1>Related videos</h1>}
                 {videoItems}
             </div>
-        );
+        )
     }
 }
