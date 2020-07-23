@@ -1,3 +1,31 @@
 .ytlogo {
     width: 100px;
 }
+
+// .pageHeading {
+//     // font-size: 1.5rem;
+//     // margin-bottom: 50px;
+// }
+
+.recommVideos {
+    cursor: pointer;
+}
+
+.recommThumbnails {
+    width: 100%;
+}
+
+.recommVideosTitle,
+.recommVideosViews,
+.recommVideosPublished,
+.bullet {
+    font-size: 0.8rem;
+}
+
+.recommVideosTitle {
+    font-weight: bold;
+}
+
+.videosDetails {
+    display: inline-block;
+}

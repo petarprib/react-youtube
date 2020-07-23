@@ -6,16 +6,17 @@ import VideoDetails from './components/VideoDetails';
 import LikedVideosList from './components/LikedVideosList';
 import SearchHistoryList from './components/SearchHistoryList';
 import RecommVideosList from './components/RecommVideosList';
-import { Image } from 'react-bootstrap';
+import videos from './videos.json';
+import recommVideos from './recommVideos.json';
+import { Image, Container, Row } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
   Route
 } from "react-router-dom";
-import videos from './videos.json';
 import moment from 'moment';
 import 'moment-timezone';
 
-const DEPLOYMENT = false;
+const DEPLOYMENT = true;
 
 // menu lateral, guardar likes, historial de busqueda y cuando se hizo (libreria moment), coger los primeros 2 videos de las ultimas 5 busquedas
 
@@ -30,12 +31,12 @@ export default class App extends Component {
 
     if (DEPLOYMENT === true) {
       this.state = {
-        videosData: videos.videos,
+        videosData: [],
         selectedVideo: null,
         likedVideos: [],
         dislikedVideos: [],
         searchHistory: [],
-        recommendedVideos: []
+        recommendedVideos: recommVideos.recommVideos
       }
     } else {
       this.state = {
@@ -52,12 +53,9 @@ export default class App extends Component {
     this.state.dislikedVideos = JSON.parse(localStorage.getItem("dislikedVideos") || "[]");
     this.state.searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
     let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
-    if (recommendedVideos.length === 10) {
+    if (recommendedVideos.length === 12 && DEPLOYMENT === false) {
       this.state.recommendedVideos = recommendedVideos;
     }
-
-    // cargar aqui videos recomendados del homepage
-    // if deployment true cargar recomendados de json local
   }
 
   handleSearch = (searchTerm) => {
@@ -107,7 +105,7 @@ export default class App extends Component {
 
           if (videosData.length === 2) {
             let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]")
-            if (recommendedVideos.length === 10) {
+            if (recommendedVideos.length === 12) {
               recommendedVideos.splice(0, 2);
             }
             recommendedVideos.push(...videosData);
@@ -235,9 +233,21 @@ export default class App extends Component {
   }
 
   render() {
+    let recommendedVideos;
+    let videoList;
     let selectedVideo;
 
-    if (this.state.selectedVideo) {
+    // SEARCH FROM SEARCH-HISTORY WON'T WORK WHILE window.location.href IS PRESENT
+
+    if (this.state.selectedVideo === null && !this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+      recommendedVideos =
+        <RecommVideosList
+          recommendedVideos={this.state.recommendedVideos}
+          handleVideoSelect={this.handleVideoSelect}
+        />
+    }
+
+    if (this.state.selectedVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
       selectedVideo =
         <VideoDetails
           selectedVideo={this.state.selectedVideo}
@@ -249,31 +259,46 @@ export default class App extends Component {
         />
     }
 
-    return (
-      <div>
-        <Sidebar />
-        <a href="http://localhost:3000/"><Image src="yt_logo.svg" className="ytlogo" /></a>
-        <Router>
-          <Route
-            path="/liked-videos"
-            component={() => <LikedVideosList likedVideos={this.state.likedVideos} />}
-          />
-          <Route
-            path="/search-history"
-            component={() => <SearchHistoryList searchHistory={this.state.searchHistory} />}
-          />
-        </Router>
-        <SearchBar handleSearch={this.handleSearch} />
-        <RecommVideosList
-          recommendedVideos={this.state.recommendedVideos}
-          handleVideoSelect={this.handleVideoSelect}
-        />
-        {selectedVideo}
+    if (this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+      videoList =
         <VideoList
           videosData={this.state.videosData}
           selectedVideo={this.state.selectedVideo}
           handleVideoSelect={this.handleVideoSelect}
         />
+    }
+
+    return (
+      <div>
+        {/* <Row>
+
+        </Row> */}
+        <Sidebar />
+        <Container fluid>
+          <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
+          <Router>
+            <Route
+              path="/liked-videos"
+              component={() =>
+                <LikedVideosList
+                  likedVideos={this.state.likedVideos}
+                  handleVideoSelect={this.handleVideoSelect}
+                />}
+            />
+            <Route
+              path="/search-history"
+              component={() =>
+                <SearchHistoryList
+                  searchHistory={this.state.searchHistory}
+                  handleSearch={this.handleSearch}
+                />}
+            />
+          </Router>
+          <SearchBar handleSearch={this.handleSearch} />
+          {recommendedVideos}
+          {selectedVideo}
+          {videoList}
+        </Container>
       </div>
     );
   }

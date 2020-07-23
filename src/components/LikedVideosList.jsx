@@ -11,6 +11,7 @@ export default class LikedVideos extends Component {
                     <LikedVideosItem
                         key={i}
                         video={video}
+                        handleVideoSelect={this.props.handleVideoSelect}
                     />
                 );
             });

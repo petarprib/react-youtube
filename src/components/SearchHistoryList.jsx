@@ -11,6 +11,7 @@ export default class SearchHistoryList extends Component {
                     <SearchHistoryItem
                         key={i}
                         search={search}
+                        handleSearch={this.props.handleSearch}
                     />
                 );
             });

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import RecommVideosItem from './RecommVideosItem';
+import { Row } from 'react-bootstrap';
 
 export default class RecommVideosList extends Component {
     render() {
@@ -21,8 +22,10 @@ export default class RecommVideosList extends Component {
 
         return (
             <div>
-                <h1>Recommended videos</h1>
-                {recommendedVideos}
+                <h4 className="pageHeading mb-3">Recommended</h4>
+                <Row>
+                    {recommendedVideos}
+                </Row>
             </div>
         );
     }

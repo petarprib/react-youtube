@@ -6,7 +6,7 @@ export default class LikedVideosItem extends Component {
         let { video } = this.props;
 
         return (
-            <div>
+            <div onClick={() => this.props.handleVideoSelect(video)}>
                 <p>{video.title}</p>
                 <Image src={video.thumbnailMedium} />
             </div>

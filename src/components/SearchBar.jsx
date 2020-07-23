@@ -17,14 +17,6 @@ export default class SearchBar extends Component {
 
     render() {
         return (
-            // <form onSubmit={this.handleSubmit}>
-            //     <input
-            //         onChange={this.handleChange}
-            //         value={this.state.searchTerm}
-            //     />
-            //     <button>Search</button>
-            // </form>
-
             <Form onSubmit={this.handleSubmit}>
                 <Form.Group>
                     <Form.Control
@@ -32,7 +24,7 @@ export default class SearchBar extends Component {
                         value={this.state.searchTerm}
                     />
                 </Form.Group>
-                <Button variant="primary">Search</Button>
+                <Button>Search</Button>
             </Form>
         );
     }
