@@ -23,8 +23,8 @@ export default class SearchBar extends Component {
                         onChange={this.handleChange}
                         value={this.state.searchTerm}
                     />
+                    <Button>Search</Button>
                 </Form.Group>
-                <Button>Search</Button>
             </Form>
         );
     }

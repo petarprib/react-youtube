@@ -16,9 +16,9 @@ import {
 import moment from 'moment';
 import 'moment-timezone';
 
-const DEPLOYMENT = true;
+// ROUTING, SIDEBAR, HOOKS
 
-// menu lateral, guardar likes, historial de busqueda y cuando se hizo (libreria moment), coger los primeros 2 videos de las ultimas 5 busquedas
+const DEPLOYMENT = true;
 
 // const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
 const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
@@ -31,8 +31,8 @@ export default class App extends Component {
 
     if (DEPLOYMENT === true) {
       this.state = {
-        videosData: [],
-        selectedVideo: null,
+        videosData: videos.videos,
+        selectVideo: videos.videos[0],
         likedVideos: [],
         dislikedVideos: [],
         searchHistory: [],
@@ -41,7 +41,7 @@ export default class App extends Component {
     } else {
       this.state = {
         videosData: [],
-        selectedVideo: null,
+        selectVideo: null,
         likedVideos: [],
         dislikedVideos: [],
         searchHistory: [],
@@ -68,7 +68,7 @@ export default class App extends Component {
     this.setState({ searchHistory: newSearchHistory });
 
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
-    this.setState({ selectedVideo: null });
+    this.setState({ selectVideo: null });
 
     const MODIFIED_SEARCH = searchTerm.replace(/ /g, "+");
     const SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?q=${MODIFIED_SEARCH}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY2}`;
@@ -92,7 +92,12 @@ export default class App extends Component {
           videosData.push({
             id: video.id.videoId,
             title: video.snippet.title,
-            description: video.snippet.description,
+            //Description provided by the Youtube API is just a shortened string without the entire content or paragraphs
+            description: [
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut nulla venenatis nunc rutrum finibus vel quis sapien. Proin blandit est quis vestibulum imperdiet. Vivamus vitae enim placerat, tempor libero sed, commodo velit. Mauris tempor enim at nibh finibus, efficitur ultrices est vestibulum. Donec facilisis vel tellus at molestie. Mauris et mi ligula. In erat purus, scelerisque quis ex sed, consequat posuere justo.",
+              "Nulla luctus est non molestie convallis. Curabitur sed nulla massa. Sed elementum, diam id tempus ornare, ipsum libero placerat urna, quis finibus elit metus vitae tellus. Suspendisse mattis volutpat lacus auctor sodales. Proin eget quam quis nunc suscipit elementum. Quisque porta eget ligula convallis consequat. Vestibulum commodo, sem ac hendrerit rhoncus, eros diam cursus orci, at pellentesque leo magna non ex. Mauris vel suscipit erat. Praesent facilisis leo volutpat, tincidunt nulla id, maximus eros.",
+              "Aenean rutrum eu enim a ullamcorper. Sed quis felis eu lacus ultrices commodo quis vitae eros. Etiam dapibus venenatis justo, id sodales elit molestie ac. Maecenas blandit tincidunt rutrum. Phasellus interdum erat vel elit dictum pellentesque. Praesent consectetur velit non arcu dignissim, ut hendrerit sem malesuada. Aenean vulputate augue et mi tempus vehicula. Donec in mollis felis. In pellentesque ullamcorper magna, sed condimentum."
+            ],
             publishedAt: video.snippet.publishedAt,
             thumbnailDefault: video.snippet.thumbnails.default.url,
             thumbnailHigh: video.snippet.thumbnails.high.url,
@@ -131,87 +136,87 @@ export default class App extends Component {
         });
     }
 
-    this.setState({ selectedVideo: video });
+    this.setState({ selectVideo: video });
   }
 
-  handleLike = (selectedVideo) => {
+  handleLike = (selectVideo) => {
     let { likedVideos, dislikedVideos } = this.state;
     let newLikedVideos = this.state.likedVideos;
 
     if (!likedVideos.length) {
-      newLikedVideos.push(selectedVideo);
+      newLikedVideos.push(selectVideo);
       localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
       this.setState({ likedVideos: newLikedVideos });
 
       if (dislikedVideos.length) {
-        this.removeDislike(selectedVideo)
+        this.removeDislike(selectVideo)
       }
     } else {
       let likedIndex;
 
       for (let i = 0; i < likedVideos.length; i++) {
-        if (likedVideos[i].id === selectedVideo.id) {
+        if (likedVideos[i].id === selectVideo.id) {
           likedIndex = i;
           break;
         }
       }
 
       if (likedIndex !== undefined) {
-        this.removeLike(selectedVideo);
+        this.removeLike(selectVideo);
       } else {
-        newLikedVideos.push(selectedVideo);
+        newLikedVideos.push(selectVideo);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
         this.setState({ likedVideos: newLikedVideos });
 
         if (dislikedVideos.length) {
-          this.removeDislike(selectedVideo)
+          this.removeDislike(selectVideo)
         }
       }
     }
   }
 
-  handleDislike = (selectedVideo) => {
+  handleDislike = (selectVideo) => {
     let { dislikedVideos, likedVideos } = this.state;
     let newDislikedVideos = this.state.dislikedVideos;
 
     if (!dislikedVideos.length) {
-      newDislikedVideos.push(selectedVideo);
+      newDislikedVideos.push(selectVideo);
       localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
       this.setState({ dislikedVideos: newDislikedVideos });
 
       if (likedVideos.length) {
-        this.removeLike(selectedVideo);
+        this.removeLike(selectVideo);
       }
     } else {
       let dislikedIndex;
 
       for (let i = 0; i < dislikedVideos.length; i++) {
-        if (dislikedVideos[i].id === selectedVideo.id) {
+        if (dislikedVideos[i].id === selectVideo.id) {
           dislikedIndex = i;
           break;
         }
       }
 
       if (dislikedIndex !== undefined) {
-        this.removeDislike(selectedVideo)
+        this.removeDislike(selectVideo)
       } else {
-        newDislikedVideos.push(selectedVideo);
+        newDislikedVideos.push(selectVideo);
         localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
         this.setState({ dislikedVideos: newDislikedVideos });
 
         if (likedVideos.length) {
-          this.removeLike(selectedVideo)
+          this.removeLike(selectVideo)
         }
       }
     }
   }
 
-  removeLike = (selectedVideo) => {
+  removeLike = (selectVideo) => {
     let { likedVideos } = this.state;
     let newLikedVideos = this.state.likedVideos;
 
     for (let i = 0; i < likedVideos.length; i++) {
-      if (likedVideos[i].id === selectedVideo.id) {
+      if (likedVideos[i].id === selectVideo.id) {
         newLikedVideos.splice(i, 1);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
         this.setState({ likedVideos: newLikedVideos });
@@ -219,12 +224,12 @@ export default class App extends Component {
     }
   }
 
-  removeDislike = (selectedVideo) => {
+  removeDislike = (selectVideo) => {
     let { dislikedVideos } = this.state;
     let newDislikedVideos = this.state.dislikedVideos;
 
     for (let i = 0; i < dislikedVideos.length; i++) {
-      if (dislikedVideos[i].id === selectedVideo.id) {
+      if (dislikedVideos[i].id === selectVideo.id) {
         newDislikedVideos.splice(i, 1);
         localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
         this.setState({ dislikedVideos: newDislikedVideos });
@@ -235,11 +240,11 @@ export default class App extends Component {
   render() {
     let recommendedVideos;
     let videoList;
-    let selectedVideo;
+    let selectVideo;
 
     // SEARCH FROM SEARCH-HISTORY WON'T WORK WHILE window.location.href IS PRESENT
 
-    if (this.state.selectedVideo === null && !this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+    if (this.state.selectVideo === null && !this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
       recommendedVideos =
         <RecommVideosList
           recommendedVideos={this.state.recommendedVideos}
@@ -247,10 +252,10 @@ export default class App extends Component {
         />
     }
 
-    if (this.state.selectedVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
-      selectedVideo =
+    if (this.state.selectVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+      selectVideo =
         <VideoDetails
-          selectedVideo={this.state.selectedVideo}
+          selectVideo={this.state.selectVideo}
           likedVideos={this.state.likedVideos}
           dislikedVideos={this.state.dislikedVideos}
           handleVideoSelect={this.handleVideoSelect}
@@ -263,7 +268,7 @@ export default class App extends Component {
       videoList =
         <VideoList
           videosData={this.state.videosData}
-          selectedVideo={this.state.selectedVideo}
+          selectVideo={this.state.selectVideo}
           handleVideoSelect={this.handleVideoSelect}
         />
     }
@@ -296,7 +301,7 @@ export default class App extends Component {
           </Router>
           <SearchBar handleSearch={this.handleSearch} />
           {recommendedVideos}
-          {selectedVideo}
+          {selectVideo}
           {videoList}
         </Container>
       </div>

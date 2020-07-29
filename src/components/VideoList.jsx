@@ -8,6 +8,7 @@ export default class VideoList extends Component {
                 <VideoItem
                     key={i}
                     video={video}
+                    selectVideo={this.props.selectVideo}
                     handleVideoSelect={this.props.handleVideoSelect}
                 />
             );
@@ -15,7 +16,7 @@ export default class VideoList extends Component {
 
         return (
             <div>
-                {this.props.selectedVideo === null ? <h1>Search results</h1> : <h1>Related videos</h1>}
+                {this.props.selectVideo === null ? null : <h1>Related videos</h1>}
                 {videoItems}
             </div>
         )

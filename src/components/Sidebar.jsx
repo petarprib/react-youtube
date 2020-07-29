@@ -10,14 +10,6 @@ export default class Sidebar extends Component {
                     <Nav.Link href="/search-history">Search history</Nav.Link>
                 </Nav>
             </Navbar>
-
-            // <Row>
-            //     <Col xs={1} className="sidebar">
-            //         <Navbar>
-
-            //         </Navbar>
-            //     </Col>
-            // </Row>
         );
     }
 }

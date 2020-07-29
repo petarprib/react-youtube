@@ -8,17 +8,17 @@ export default class RecommVideosItem extends Component {
 
         return (
             <Col className="mb-3" xs={6} md={4} lg={3}>
-                <div className="recommVideos" onClick={() => this.props.handleVideoSelect(video)}>
-                    <img src={video.thumbnailMedium} alt={`${video.id}`} className="recommThumbnails" />
+                <div className="videos" onClick={() => this.props.handleVideoSelect(video)}>
+                    <img src={video.thumbnailMedium} alt={`${video.id}`} className="w-100" />
                 </div>
                 <div
-                    className="recommVideos pt-2"
+                    className="videos pt-1"
                     onClick={() => this.props.handleVideoSelect(video)}
                 >
-                    <p className="recommVideosTitle mb-0">{video.title}</p>
-                    <p className="recommVideosViews videosDetails mr-1">{parseInt(video.viewCount).toLocaleString()} views</p>
-                    <p className="bullet videosDetails mr-1">•</p>
-                    <Moment fromNow className="recommVideosPublished videosDetails">{video.publishedAt}</Moment>
+                    <p className="videosTitle mb-0">{video.title}</p>
+                    <p className="videosViews d-inline mr-1">{parseInt(video.viewCount).toLocaleString()} views</p>
+                    <p className="bullet d-inline mr-1">•</p>
+                    <Moment fromNow className="videosPublished d-inline">{video.publishedAt}</Moment>
                 </div>
             </Col>
         );
