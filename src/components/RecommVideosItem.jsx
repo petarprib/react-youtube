@@ -7,7 +7,7 @@ export default class RecommVideosItem extends Component {
         let { video } = this.props;
 
         return (
-            <Col className="mb-3 recommVideos" xs={6} md={4} lg={3}>
+            <Col className="mb-3" xs={6} md={4} lg={3}>
                 <div className="pointer" onClick={() => this.props.handleVideoSelect(video)}>
                     <img src={video.thumbnailMedium} alt={`${video.id}`} className="w-100" />
                 </div>
