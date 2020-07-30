@@ -26,7 +26,7 @@ import 'moment-timezone';
 
 // zašto na recommVideos ne radi space-evenly, ellipsis opis videa, kako napravit sidebar
 
-const DEPLOYMENT = false;
+const DEPLOYMENT = true;
 
 // const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
 const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
