@@ -8,7 +8,7 @@ import SearchHistoryList from './components/SearchHistoryList';
 import RecommVideosList from './components/RecommVideosList';
 import videos from './videos.json';
 import recommVideos from './recommVideos.json';
-import { Image, Container, Row } from 'react-bootstrap';
+import { Image, Container, Row, Col } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
   Route
@@ -16,9 +16,17 @@ import {
 import moment from 'moment';
 import 'moment-timezone';
 
+// M19: 1h/dia LO MÁS IMPORTANTE
+// M10: clone de evernote después de youtube 1-2 dias
+// Repaso general al temario: 5-7 días (TODO: testing, degurar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
+// REPADO HOOKS Y LUEGO CONVERTIR EL PROYECTO
+// M18: ejemplo app pizzas
+
 // ROUTING, SIDEBAR, HOOKS
 
-const DEPLOYMENT = true;
+// zašto na recommVideos ne radi space-evenly, ellipsis opis videa, kako napravit sidebar
+
+const DEPLOYMENT = false;
 
 // const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
 const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
@@ -31,8 +39,8 @@ export default class App extends Component {
 
     if (DEPLOYMENT === true) {
       this.state = {
-        videosData: videos.videos,
-        selectVideo: videos.videos[0],
+        videosData: [],
+        selectVideo: null,
         likedVideos: [],
         dislikedVideos: [],
         searchHistory: [],
@@ -110,11 +118,25 @@ export default class App extends Component {
 
           if (videosData.length === 2) {
             let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]")
-            if (recommendedVideos.length === 12) {
-              recommendedVideos.splice(0, 2);
+
+            let match = false;
+            for (let i = 0; i < recommendedVideos.length; i++) {
+              for (let j = 0; j < videosData.length; j++) {
+                if (recommendedVideos[i].id === videosData[j].id) {
+                  match = true;
+                  break;
+                }
+              }
+              if (match) break;
             }
-            recommendedVideos.push(...videosData);
-            localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
+
+            if (match === false) {
+              if (recommendedVideos.length === 12) {
+                recommendedVideos.splice(0, 2);
+              }
+              recommendedVideos.push(...videosData);
+              localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
+            }
           }
 
           if (videosData.length === videos.length) {
@@ -254,17 +276,28 @@ export default class App extends Component {
 
     if (this.state.selectVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
       selectVideo =
-        <VideoDetails
-          selectVideo={this.state.selectVideo}
-          likedVideos={this.state.likedVideos}
-          dislikedVideos={this.state.dislikedVideos}
-          handleVideoSelect={this.handleVideoSelect}
-          handleLike={this.handleLike}
-          handleDislike={this.handleDislike}
-        />
+        <Row>
+          <Col xs={12} lg={8}>
+            <VideoDetails
+              selectVideo={this.state.selectVideo}
+              likedVideos={this.state.likedVideos}
+              dislikedVideos={this.state.dislikedVideos}
+              handleVideoSelect={this.handleVideoSelect}
+              handleLike={this.handleLike}
+              handleDislike={this.handleDislike}
+            />
+          </Col>
+          <Col lg={4} className="pl-lg-0">
+            <VideoList
+              videosData={this.state.videosData}
+              selectVideo={this.state.selectVideo}
+              handleVideoSelect={this.handleVideoSelect}
+            />
+          </Col>
+        </Row>
     }
 
-    if (this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+    if (this.state.videosData.length && this.state.selectVideo === null && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
       videoList =
         <VideoList
           videosData={this.state.videosData}

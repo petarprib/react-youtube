@@ -16,7 +16,8 @@ export default class VideoList extends Component {
 
         return (
             <div>
-                {this.props.selectVideo === null ? null : <h1>Related videos</h1>}
+                {this.props.selectVideo === null ? null : <h6>Related videos</h6>}
+                <hr className="mt-3 mb-3" />
                 {videoItems}
             </div>
         )

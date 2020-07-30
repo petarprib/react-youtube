@@ -29,29 +29,29 @@ export default class VideoDetails extends Component {
 
         // console.log(selectVideo.description.join("").length)
 
-        // if(selectVideo.description.join("").length > 150) {
-
-        // }
+        let description = selectVideo.description.map((descrBlock, i) => {
+            return <p key={i}>{descrBlock}</p>
+        });
 
         return (
             <div id="selectVideo">
-                <iframe
-                    title={selectVideo.title}
-                    width="560"
-                    height="315"
-                    src={`https://www.youtube.com/embed/${selectVideo.id}`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                ></iframe>
+                <div className="embed-responsive embed-responsive-16by9 mb-2">
+                    <iframe
+                        title={selectVideo.title}
+                        src={`https://www.youtube.com/embed/${selectVideo.id}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    ></iframe>
+                </div>
                 <h1 id="selectVideoTitle">{selectVideo.title}</h1>
-                <Row className="">
-                    <Col className="pr-0">
+                <Row>
+                    <Col>
                         <p className="selectVideoDetails d-inline mr-1">{parseInt(selectVideo.viewCount).toLocaleString()} views</p>
                         <p className="selectVideoDetails d-inline mr-1">•</p>
                         <Moment format="MMM DD, YYYY" className="selectVideoDetails d-inline">{selectVideo.publishedAt}</Moment>
                     </Col>
-                    <Col className="pl-0">
+                    <Col className="text-right">
                         <i
                             className="fas fa-thumbs-up mr-1 d-inline"
                             style={{ color: likeColor }}
@@ -66,9 +66,8 @@ export default class VideoDetails extends Component {
                         <p className="d-inline selectVideoDetails">{dislikeCount}</p>
                     </Col>
                 </Row>
-                <hr className="mt-2 mb-2"/>
-                <p>{selectVideo.description}</p>
-                <hr className="mt-2 mb-2"/>
+                <hr className="mt-2 mb-2" />
+                {description}
             </div>
         );
     }
