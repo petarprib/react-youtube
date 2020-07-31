@@ -18,8 +18,8 @@ import 'moment-timezone';
 
 // M19: 1h/dia LO MÁS IMPORTANTE
 // M10: clone de evernote después de youtube 1-2 dias
-// Repaso general al temario: 5-7 días (TODO: testing, degurar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
-// REPADO HOOKS Y LUEGO CONVERTIR EL PROYECTO
+// Repaso general al temario: 5-7 días (TODO: testing, deburar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
+// REPASO HOOKS Y LUEGO CONVERTIR EL PROYECTO
 // M18: ejemplo app pizzas
 
 // ROUTING, SIDEBAR, HOOKS
@@ -305,6 +305,8 @@ export default class App extends Component {
           handleVideoSelect={this.handleVideoSelect}
         />
     }
+
+    console.log(this.state.likedVideos)
 
     return (
       <div>

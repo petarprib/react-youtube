@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Moment from 'react-moment';
 
-const VideoDetails = props => {
+const VideoDetails = (props) => {
     let { selectVideo, likedVideos, dislikedVideos } = props;
 
     let likeCount = parseInt(selectVideo.likeCount);

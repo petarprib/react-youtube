@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Image } from 'react-bootstrap';
 
-export default class LikedVideosItem extends Component {
-    render() {
-        let { video } = this.props;
+const LikedVideosItem = (props) => {
+    let { video } = props;
 
-        return (
-            <div onClick={() => this.props.handleVideoSelect(video)}>
-                <Image src={video.thumbnailMedium} />
-                <p>{video.title}</p>
-            </div>
-        );
-    }
+    return (
+        <div onClick={() => props.handleVideoSelect(video)}>
+            <Image src={video.thumbnailMedium} />
+            <p>{video.title}</p>
+        </div>
+    );
 }
+
+export default LikedVideosItem;

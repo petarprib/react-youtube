@@ -26,6 +26,7 @@
 }
 
 #sidebar {
+  height: 100vh;
   max-width: 15%;
   background-color: #f5f5f5;
 }

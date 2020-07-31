@@ -2,7 +2,7 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Moment from 'react-moment';
 
-const VideoItem = props => {
+const VideoItem = (props) => {
     let { video, selectVideo } = props;
 
     let thumbnail;
