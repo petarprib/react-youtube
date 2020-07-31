@@ -308,34 +308,37 @@ export default class App extends Component {
 
     return (
       <div>
-        {/* <Row>
-
-        </Row> */}
-        <Sidebar />
         <Container fluid>
-          <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
-          <Router>
-            <Route
-              path="/liked-videos"
-              component={() =>
-                <LikedVideosList
-                  likedVideos={this.state.likedVideos}
-                  handleVideoSelect={this.handleVideoSelect}
-                />}
-            />
-            <Route
-              path="/search-history"
-              component={() =>
-                <SearchHistoryList
-                  searchHistory={this.state.searchHistory}
-                  handleSearch={this.handleSearch}
-                />}
-            />
-          </Router>
-          <SearchBar handleSearch={this.handleSearch} />
-          {recommendedVideos}
-          {selectVideo}
-          {videoList}
+          <Row>
+            <Col id="sidebar" className="pr-0">
+              <Sidebar />
+            </Col>
+            <Col>
+              <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
+              <Router>
+                <Route
+                  path="/liked-videos"
+                  component={() =>
+                    <LikedVideosList
+                      likedVideos={this.state.likedVideos}
+                      handleVideoSelect={this.handleVideoSelect}
+                    />}
+                />
+                <Route
+                  path="/search-history"
+                  component={() =>
+                    <SearchHistoryList
+                      searchHistory={this.state.searchHistory}
+                      handleSearch={this.handleSearch}
+                    />}
+                />
+              </Router>
+              <SearchBar handleSearch={this.handleSearch} />
+              {recommendedVideos}
+              {selectVideo}
+              {videoList}
+            </Col>
+          </Row>
         </Container>
       </div>
     );
