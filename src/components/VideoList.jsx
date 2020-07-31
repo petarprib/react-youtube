@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import VideoItem from './VideoItem';
 
-export default class VideoList extends Component {
-    render() {
-        const videoItems = this.props.videosData.map((video, i) => {
-            return (
-                <VideoItem
-                    key={i}
-                    video={video}
-                    selectVideo={this.props.selectVideo}
-                    handleVideoSelect={this.props.handleVideoSelect}
-                />
-            );
-        })
-
+const VideoList = props => {
+    const videoItems = props.videosData.map((video, i) => {
         return (
+            <VideoItem
+                key={i}
+                video={video}
+                selectVideo={props.selectVideo}
+                handleVideoSelect={props.handleVideoSelect}
+            />
+        );
+    });
+
+    return (
+        <div>
             <div>
-                {this.props.selectVideo === null ? null : <h6>Related videos</h6>}
+                {props.selectVideo !== null && <h6>Related videos</h6>}
                 <hr className="mt-3 mb-3" />
                 {videoItems}
             </div>
-        )
-    }
+        </div>
+    );
 }
+
+export default VideoList;
