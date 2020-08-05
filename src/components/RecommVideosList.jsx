@@ -3,13 +3,13 @@ import RecommVideosItem from './RecommVideosItem';
 import { Row } from 'react-bootstrap';
 
 const RecommVideosList = (props) => {
-    let recommendedVideos = props.recommendedVideos;
-    for (let i = recommendedVideos.length - 1; i > 0; i--) {
+    let recommVideos = props.recommVideos;
+    for (let i = recommVideos.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
-        [recommendedVideos[i], recommendedVideos[j]] = [recommendedVideos[j], recommendedVideos[i]];
+        [recommVideos[i], recommVideos[j]] = [recommVideos[j], recommVideos[i]];
     }
 
-    recommendedVideos = recommendedVideos.map((video, i) => {
+    recommVideos = recommVideos.map((video, i) => {
         return (
             <RecommVideosItem
                 key={i}
@@ -23,7 +23,7 @@ const RecommVideosList = (props) => {
         <div>
             <h4 className="pageHeading mb-3">Recommended</h4>
             <Row>
-                {recommendedVideos}
+                {recommVideos}
             </Row>
         </div>
     );

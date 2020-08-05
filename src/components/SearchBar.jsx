@@ -1,31 +1,30 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-export default class SearchBar extends Component {
-    state = {
-        searchTerm: ""
+const SearchBar = (props) => {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    let handleChange = (e) => {
+        setSearchTerm(e.target.value);
     }
 
-    handleChange = (event) => {
-        this.setState({ searchTerm: event.target.value });
+    let handleSubmit = (e) => {
+        e.preventDefault();
+        // console.log(searchTerm)
+        props.handleSearch(searchTerm);
     }
 
-    handleSubmit = (event) => {
-        event.preventDefault();
-        this.props.handleSearch(this.state.searchTerm);
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.handleSubmit}>
-                <Form.Group>
-                    <Form.Control
-                        onChange={this.handleChange}
-                        value={this.state.searchTerm}
-                    />
-                    <Button type="submit">Search</Button>
-                </Form.Group>
-            </Form>
-        );
-    }
+    return (
+        <Form onSubmit={(e) => handleSubmit(e)}>
+            <Form.Group>
+                <Form.Control
+                    onChange={(e) => handleChange(e)}
+                    value={searchTerm}
+                />
+                <Button type="submit">Search</Button>
+            </Form.Group>
+        </Form >
+    );
 }
+
+export default SearchBar;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import SearchBar from './components/SearchBar';
 import VideoList from './components/VideoList';
@@ -7,7 +7,7 @@ import LikedVideosList from './components/LikedVideosList';
 import SearchHistoryList from './components/SearchHistoryList';
 import RecommVideosList from './components/RecommVideosList';
 import videos from './videos.json';
-import recommVideos from './recommVideos.json';
+import recommVideosDeploy from './recommVideosDeploy.json';
 import { Image, Container, Row, Col } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
@@ -28,76 +28,66 @@ import 'moment-timezone';
 
 const DEPLOYMENT = true;
 
-// const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
-const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
+const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
+// const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
 
 // HIDE THE API KEY
 
-export default class App extends Component {
-  constructor(props) {
-    super(props)
+const App = () => {
+  const [videosData, setVideosData] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [likedVideos, setLikedVideos] = useState(JSON.parse(localStorage.getItem("likedVideos") || "[]"));
+  const [dislikedVideos, setDislikedVideos] = useState(JSON.parse(localStorage.getItem("dislikedVideos") || "[]"));
+  const [searchHistory, setSearchHistory] = useState(JSON.parse(localStorage.getItem("searchHistory") || "[]"));
+  const [recommendedVideos, setRecommendedVideos] = useState([]);
 
+  useEffect(() => {
     if (DEPLOYMENT === true) {
-      this.state = {
-        videosData: [],
-        selectVideo: null,
-        likedVideos: [],
-        dislikedVideos: [],
-        searchHistory: [],
-        recommendedVideos: recommVideos.recommVideos
-      }
+      setVideosData(videos.videos);
+      setRecommendedVideos(recommVideosDeploy.recommVideosDeploy);
     } else {
-      this.state = {
-        videosData: [],
-        selectVideo: null,
-        likedVideos: [],
-        dislikedVideos: [],
-        searchHistory: [],
-        recommendedVideos: []
+      let newRecommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
+      if (newRecommendedVideos.length === 12) {
+        setRecommendedVideos(newRecommendedVideos);
       }
     }
+  }, []);
 
-    this.state.likedVideos = JSON.parse(localStorage.getItem("likedVideos") || "[]");
-    this.state.dislikedVideos = JSON.parse(localStorage.getItem("dislikedVideos") || "[]");
-    this.state.searchHistory = JSON.parse(localStorage.getItem("searchHistory") || "[]");
-    let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
-    if (recommendedVideos.length === 12 && DEPLOYMENT === false) {
-      this.state.recommendedVideos = recommendedVideos;
-    }
-  }
+  let handleSearch = (searchTerm) => {
 
-  handleSearch = (searchTerm) => {
-    let newSearchHistory = this.state.searchHistory;
+    console.log(searchTerm)
+
+    let newSearchHistory = searchHistory;
     newSearchHistory.push({
       searchTerm,
       time: moment().format()
     });
     localStorage.setItem("searchHistory", JSON.stringify(newSearchHistory));
-    this.setState({ searchHistory: newSearchHistory });
+    setSearchHistory(newSearchHistory);
+
+    setSelectedVideo(null);
 
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
-    this.setState({ selectVideo: null });
-
     const MODIFIED_SEARCH = searchTerm.replace(/ /g, "+");
-    const SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?q=${MODIFIED_SEARCH}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY2}`;
+    const SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?q=${MODIFIED_SEARCH}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY}`;
 
     fetch(SEARCH_URL)
       .then(response => response.json())
       .then(data => {
-        this.fetchVideosStats(data.items);
+        fetchVideosStats(data.items);
       });
   }
 
-  fetchVideosStats = (videos) => {
-    let videosData = [];
+  let fetchVideosStats = (videos) => {
+    let newVideosData = [];
 
     videos.forEach(video => {
-      const STATS_URL = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY2}`;
+      const STATS_URL = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY}`;
 
       fetch(STATS_URL)
         .then(response => response.json())
         .then(data => {
-          videosData.push({
+          newVideosData.push({
             id: video.id.videoId,
             title: video.snippet.title,
             //Description provided by the Youtube API is just a shortened string without the entire content or paragraphs
@@ -116,13 +106,13 @@ export default class App extends Component {
             dislikeCount: data.items[0].statistics.dislikeCount
           });
 
-          if (videosData.length === 2) {
+          if (newVideosData.length === 2) {
             let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]")
 
             let match = false;
             for (let i = 0; i < recommendedVideos.length; i++) {
-              for (let j = 0; j < videosData.length; j++) {
-                if (recommendedVideos[i].id === videosData[j].id) {
+              for (let j = 0; j < newVideosData.length; j++) {
+                if (recommendedVideos[i].id === newVideosData[j].id) {
                   match = true;
                   break;
                 }
@@ -130,219 +120,224 @@ export default class App extends Component {
               if (match) break;
             }
 
+            // if (!match)
             if (match === false) {
               if (recommendedVideos.length === 12) {
                 recommendedVideos.splice(0, 2);
               }
-              recommendedVideos.push(...videosData);
+              recommendedVideos.push(...newVideosData);
               localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
             }
           }
 
-          if (videosData.length === videos.length) {
-            this.setState({ videosData });
+          if (newVideosData.length === videos.length) {
+            this.setState({ newVideosData });
           }
         });
     });
   }
 
-  handleVideoSelect = (video) => {
+  let handleVideoSelect = (video) => {
     // HAVE CHANGED MAX RESULTS FROM 20 TO 3
     if (DEPLOYMENT === false) {
-      const RELATED_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${video.id}&type=video&order=relevance&maxResults=3&key=${API_KEY2}`;
+      const RELATED_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${video.id}&type=video&order=relevance&maxResults=3&key=${API_KEY}`;
 
       fetch(RELATED_URL)
         .then(response => response.json())
         .then(data => {
-          this.fetchVideosStats(data.items);
+          fetchVideosStats(data.items);
         });
     }
 
-    this.setState({ selectVideo: video });
+    setSelectedVideo(video);
   }
 
-  handleLike = (selectVideo) => {
-    let { likedVideos, dislikedVideos } = this.state;
-    let newLikedVideos = this.state.likedVideos;
+  let handleLike = (selectedVideo) => {
+    let newLikedVideos = likedVideos;
 
     if (!likedVideos.length) {
-      newLikedVideos.push(selectVideo);
+      newLikedVideos.push(selectedVideo);
       localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
-      this.setState({ likedVideos: newLikedVideos });
+      setLikedVideos(newLikedVideos);
 
       if (dislikedVideos.length) {
-        this.removeDislike(selectVideo)
+        removeDislike(selectedVideo);
       }
     } else {
       let likedIndex;
 
       for (let i = 0; i < likedVideos.length; i++) {
-        if (likedVideos[i].id === selectVideo.id) {
+        if (likedVideos[i].id === selectedVideo.id) {
           likedIndex = i;
           break;
         }
       }
 
       if (likedIndex !== undefined) {
-        this.removeLike(selectVideo);
+        removeLike(selectedVideo);
       } else {
-        newLikedVideos.push(selectVideo);
+        newLikedVideos.push(selectedVideo);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
-        this.setState({ likedVideos: newLikedVideos });
+        setLikedVideos(newLikedVideos);
 
         if (dislikedVideos.length) {
-          this.removeDislike(selectVideo)
+          removeDislike(selectedVideo);
         }
       }
     }
   }
 
-  handleDislike = (selectVideo) => {
-    let { dislikedVideos, likedVideos } = this.state;
-    let newDislikedVideos = this.state.dislikedVideos;
+  let handleDislike = (selectedVideo) => {
+    // let { dislikedVideos, likedVideos } = this.state;
+    let newDislikedVideos = dislikedVideos;
 
     if (!dislikedVideos.length) {
-      newDislikedVideos.push(selectVideo);
+      newDislikedVideos.push(selectedVideo);
       localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
-      this.setState({ dislikedVideos: newDislikedVideos });
+      setDislikedVideos(newDislikedVideos);
 
       if (likedVideos.length) {
-        this.removeLike(selectVideo);
+        removeLike(selectedVideo);
       }
     } else {
       let dislikedIndex;
 
       for (let i = 0; i < dislikedVideos.length; i++) {
-        if (dislikedVideos[i].id === selectVideo.id) {
+        if (dislikedVideos[i].id === selectedVideo.id) {
           dislikedIndex = i;
           break;
         }
       }
 
       if (dislikedIndex !== undefined) {
-        this.removeDislike(selectVideo)
+        removeDislike(selectedVideo);
       } else {
-        newDislikedVideos.push(selectVideo);
+        newDislikedVideos.push(selectedVideo);
         localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
-        this.setState({ dislikedVideos: newDislikedVideos });
+        setDislikedVideos(newDislikedVideos);
 
         if (likedVideos.length) {
-          this.removeLike(selectVideo)
+          removeLike(selectedVideo);
         }
       }
     }
   }
 
-  removeLike = (selectVideo) => {
-    let { likedVideos } = this.state;
-    let newLikedVideos = this.state.likedVideos;
+  let removeLike = (selectedVideo) => {
+    // let { likedVideos } = this.state;
+    let newLikedVideos = likedVideos;
 
     for (let i = 0; i < likedVideos.length; i++) {
-      if (likedVideos[i].id === selectVideo.id) {
+      if (likedVideos[i].id === selectedVideo.id) {
         newLikedVideos.splice(i, 1);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
-        this.setState({ likedVideos: newLikedVideos });
+        setLikedVideos(newLikedVideos);
       }
     }
   }
 
-  removeDislike = (selectVideo) => {
-    let { dislikedVideos } = this.state;
-    let newDislikedVideos = this.state.dislikedVideos;
+  let removeDislike = (selectedVideo) => {
+    // let { dislikedVideos } = this.state;
+    let newDislikedVideos = dislikedVideos;
 
     for (let i = 0; i < dislikedVideos.length; i++) {
-      if (dislikedVideos[i].id === selectVideo.id) {
+      if (dislikedVideos[i].id === selectedVideo.id) {
         newDislikedVideos.splice(i, 1);
         localStorage.setItem("dislikedVideos", JSON.stringify(newDislikedVideos));
-        this.setState({ dislikedVideos: newDislikedVideos });
+        setDislikedVideos(newDislikedVideos);
       }
     }
   }
 
-  render() {
-    let recommendedVideos;
-    let videoList;
-    let selectVideo;
+  let recommVideos;
+  let videoList;
+  let nowPlaying;
 
-    // SEARCH FROM SEARCH-HISTORY WON'T WORK WHILE window.location.href IS PRESENT
+  // SEARCH FROM SEARCH-HISTORY WON'T WORK WHILE window.location.href IS PRESENT
 
-    if (this.state.selectVideo === null && !this.state.videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
-      recommendedVideos =
-        <RecommVideosList
-          recommendedVideos={this.state.recommendedVideos}
-          handleVideoSelect={this.handleVideoSelect}
-        />
-    }
+  if (selectedVideo === null && videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+    recommVideos =
+      <RecommVideosList
+        recommVideos={recommendedVideos}
+        handleVideoSelect={() => handleVideoSelect()}
+      />
+  }
 
-    if (this.state.selectVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
-      selectVideo =
+  if (selectedVideo && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+    nowPlaying =
+      <Row>
+        <Col xs={12} lg={8}>
+          <VideoDetails
+            selectVideo={selectedVideo}
+            likedVids={likedVideos}
+            dislikedVids={dislikedVideos}
+            handleVideoSelect={() => handleVideoSelect()}
+            handleLike={() => handleLike()}
+            handleDislike={() => handleDislike()}
+          />
+        </Col>
+        <Col lg={4} className="pl-lg-0">
+          <VideoList
+            videosData={videosData}
+            nowPlaying={selectedVideo}
+            handleVideoSelect={() => handleVideoSelect()}
+          />
+        </Col>
+      </Row>
+  }
+
+  if (videosData.length && selectedVideo === null && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+    videoList =
+      <VideoList
+        videosData={videosData}
+        nowPlaying={selectedVideo}
+        handleVideoSelect={() => handleVideoSelect()}
+      />
+  }
+
+  // const [videosData, setVideosData] = useState([]);
+  // const [selectedVideo, setSelectedVideo] = useState(null);
+  // const [likedVideos, setLikedVideos] = useState(JSON.parse(localStorage.getItem("likedVideos") || "[]"));
+  // const [dislikedVideos, setDislikedVideos] = useState(JSON.parse(localStorage.getItem("dislikedVideos") || "[]"));
+  // const [searchHistory, setSearchHistory] = useState(JSON.parse(localStorage.getItem("searchHistory") || "[]"));
+  // const [recommendedVideos, setRecommendedVideos] = useState([]);
+
+  return (
+    <div>
+      <Container fluid>
         <Row>
-          <Col xs={12} lg={8}>
-            <VideoDetails
-              selectVideo={this.state.selectVideo}
-              likedVideos={this.state.likedVideos}
-              dislikedVideos={this.state.dislikedVideos}
-              handleVideoSelect={this.handleVideoSelect}
-              handleLike={this.handleLike}
-              handleDislike={this.handleDislike}
-            />
+          <Col id="sidebar" className="pr-0">
+            <Sidebar />
           </Col>
-          <Col lg={4} className="pl-lg-0">
-            <VideoList
-              videosData={this.state.videosData}
-              selectVideo={this.state.selectVideo}
-              handleVideoSelect={this.handleVideoSelect}
-            />
+          <Col>
+            <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
+            <Router>
+              <Route
+                path="/liked-videos"
+                component={() =>
+                  <LikedVideosList
+                    likedVideos={likedVideos}
+                    handleVideoSelect={() => handleVideoSelect()}
+                  />}
+              />
+              <Route
+                path="/search-history"
+                component={() =>
+                  <SearchHistoryList
+                    searchHistory={searchHistory}
+                    handleSearch={() => handleSearch()}
+                  />}
+              />
+            </Router>
+            <SearchBar handleSearch={() => handleSearch()} />
+            {recommVideos}
+            {nowPlaying}
+            {videoList}
           </Col>
         </Row>
-    }
-
-    if (this.state.videosData.length && this.state.selectVideo === null && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
-      videoList =
-        <VideoList
-          videosData={this.state.videosData}
-          selectVideo={this.state.selectVideo}
-          handleVideoSelect={this.handleVideoSelect}
-        />
-    }
-
-    console.log(this.state.likedVideos)
-
-    return (
-      <div>
-        <Container fluid>
-          <Row>
-            <Col id="sidebar" className="pr-0">
-              <Sidebar />
-            </Col>
-            <Col>
-              <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
-              <Router>
-                <Route
-                  path="/liked-videos"
-                  component={() =>
-                    <LikedVideosList
-                      likedVideos={this.state.likedVideos}
-                      handleVideoSelect={this.handleVideoSelect}
-                    />}
-                />
-                <Route
-                  path="/search-history"
-                  component={() =>
-                    <SearchHistoryList
-                      searchHistory={this.state.searchHistory}
-                      handleSearch={this.handleSearch}
-                    />}
-                />
-              </Router>
-              <SearchBar handleSearch={this.handleSearch} />
-              {recommendedVideos}
-              {selectVideo}
-              {videoList}
-            </Col>
-          </Row>
-        </Container>
-      </div>
-    );
-  }
+      </Container>
+    </div>
+  );
 }
+
+export default App;

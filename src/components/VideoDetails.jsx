@@ -3,23 +3,23 @@ import { Row, Col } from 'react-bootstrap';
 import Moment from 'react-moment';
 
 const VideoDetails = (props) => {
-    let { selectVideo, likedVideos, dislikedVideos } = props;
+    let { selectVideo, likedVids, dislikedVids } = props;
 
     let likeCount = parseInt(selectVideo.likeCount);
     let likeColor = "#606060";
     let dislikeCount = parseInt(selectVideo.dislikeCount);
     let dislikeColor = "#606060";
 
-    for (let i = 0; i < likedVideos.length; i++) {
-        if (selectVideo.id === likedVideos[i].id) {
+    for (let i = 0; i < likedVids.length; i++) {
+        if (selectVideo.id === likedVids[i].id) {
             likeCount += 1;
             likeColor = "#008000";
             break;
         }
     }
 
-    for (let i = 0; i < dislikedVideos.length; i++) {
-        if (selectVideo.id === dislikedVideos[i].id) {
+    for (let i = 0; i < dislikedVids.length; i++) {
+        if (selectVideo.id === dislikedVids[i].id) {
             dislikeCount += 1;
             dislikeColor = "#FF0000";
             break;
