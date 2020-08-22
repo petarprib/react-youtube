@@ -6,12 +6,12 @@ const RecommVideosItem = (props) => {
     let { video } = props;
 
     return (
-        <Col className="mb-3" xs={6} md={4} lg={3}>
+        <Col className="mb-3 px-2" xs={6} md={4} lg={3}>
             <div className="pointer" onClick={() => props.handleVideoSelect(video)}>
                 <img src={video.thumbnailMedium} alt={`${video.id}`} className="w-100" />
             </div>
             <div
-                className="pointer pt-1"
+                className="pointer recommVidsDetails pt-1"
                 onClick={() => props.handleVideoSelect(video)}
             >
                 <p className="videosTitle mb-0">{video.title}</p>

@@ -18,7 +18,7 @@ import 'moment-timezone';
 
 // M19: 1h/dia LO MÁS IMPORTANTE
 // M10: clone de evernote después de youtube 1-2 dias
-// Repaso general al temario: 5-7 días (TODO: testing, deburar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
+// Repaso general al temario: 5-7 días (TODO: testing, debugar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
 // REPASO HOOKS Y LUEGO CONVERTIR EL PROYECTO
 // M18: ejemplo app pizzas
 
@@ -54,9 +54,6 @@ const App = () => {
   }, []);
 
   let handleSearch = (searchTerm) => {
-
-    console.log(searchTerm)
-
     let newSearchHistory = searchHistory;
     newSearchHistory.push({
       searchTerm,
@@ -120,8 +117,7 @@ const App = () => {
               if (match) break;
             }
 
-            // if (!match)
-            if (match === false) {
+            if (!match) {
               if (recommendedVideos.length === 12) {
                 recommendedVideos.splice(0, 2);
               }
@@ -129,9 +125,9 @@ const App = () => {
               localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
             }
           }
-
+          // PROMISES
           if (newVideosData.length === videos.length) {
-            this.setState({ newVideosData });
+            setVideosData(newVideosData)
           }
         });
     });
@@ -255,11 +251,11 @@ const App = () => {
 
   // SEARCH FROM SEARCH-HISTORY WON'T WORK WHILE window.location.href IS PRESENT
 
-  if (selectedVideo === null && videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
+  if (selectedVideo === null && !videosData.length && window.location.href !== "http://localhost:3000/liked-videos" && window.location.href !== "http://localhost:3000/search-history") {
     recommVideos =
       <RecommVideosList
         recommVideos={recommendedVideos}
-        handleVideoSelect={() => handleVideoSelect()}
+        handleVideoSelect={(video) => handleVideoSelect(video)}
       />
   }
 
@@ -271,16 +267,16 @@ const App = () => {
             selectVideo={selectedVideo}
             likedVids={likedVideos}
             dislikedVids={dislikedVideos}
-            handleVideoSelect={() => handleVideoSelect()}
-            handleLike={() => handleLike()}
-            handleDislike={() => handleDislike()}
+            handleVideoSelect={(video) => handleVideoSelect(video)}
+            handleLike={(selectVideo) => handleLike(selectVideo)}
+            handleDislike={(selectVideo) => handleDislike(selectVideo)}
           />
         </Col>
         <Col lg={4} className="pl-lg-0">
           <VideoList
             videosData={videosData}
-            nowPlaying={selectedVideo}
-            handleVideoSelect={() => handleVideoSelect()}
+            selectVideo={selectedVideo}
+            handleVideoSelect={(video) => handleVideoSelect(video)}
           />
         </Col>
       </Row>
@@ -290,53 +286,44 @@ const App = () => {
     videoList =
       <VideoList
         videosData={videosData}
-        nowPlaying={selectedVideo}
-        handleVideoSelect={() => handleVideoSelect()}
+        selectVideo={selectedVideo}
+        handleVideoSelect={(video) => handleVideoSelect(video)}
       />
   }
 
-  // const [videosData, setVideosData] = useState([]);
-  // const [selectedVideo, setSelectedVideo] = useState(null);
-  // const [likedVideos, setLikedVideos] = useState(JSON.parse(localStorage.getItem("likedVideos") || "[]"));
-  // const [dislikedVideos, setDislikedVideos] = useState(JSON.parse(localStorage.getItem("dislikedVideos") || "[]"));
-  // const [searchHistory, setSearchHistory] = useState(JSON.parse(localStorage.getItem("searchHistory") || "[]"));
-  // const [recommendedVideos, setRecommendedVideos] = useState([]);
-
   return (
-    <div>
-      <Container fluid>
-        <Row>
-          <Col id="sidebar" className="pr-0">
-            <Sidebar />
-          </Col>
-          <Col>
-            <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
-            <Router>
-              <Route
-                path="/liked-videos"
-                component={() =>
-                  <LikedVideosList
-                    likedVideos={likedVideos}
-                    handleVideoSelect={() => handleVideoSelect()}
-                  />}
-              />
-              <Route
-                path="/search-history"
-                component={() =>
-                  <SearchHistoryList
-                    searchHistory={searchHistory}
-                    handleSearch={() => handleSearch()}
-                  />}
-              />
-            </Router>
-            <SearchBar handleSearch={() => handleSearch()} />
-            {recommVideos}
-            {nowPlaying}
-            {videoList}
-          </Col>
-        </Row>
-      </Container>
-    </div>
+    <Container fluid>
+      <Row>
+        <Col id="sidebar" className="pr-0">
+          <Sidebar />
+        </Col>
+        <Col>
+          <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
+          <Router>
+            <Route
+              path="/liked-videos"
+              component={() =>
+                <LikedVideosList
+                  likedVideos={likedVideos}
+                  handleVideoSelect={(video) => handleVideoSelect(video)}
+                />}
+            />
+            <Route
+              path="/search-history"
+              component={() =>
+                <SearchHistoryList
+                  searchHistory={searchHistory}
+                  handleSearch={(searchTerm) => handleSearch(searchTerm)}
+                />}
+            />
+          </Router>
+          <SearchBar handleSearch={(searchTerm) => handleSearch(searchTerm)} />
+          {recommVideos}
+          {nowPlaying}
+          {videoList}
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

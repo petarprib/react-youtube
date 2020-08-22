@@ -10,7 +10,6 @@ const SearchBar = (props) => {
 
     let handleSubmit = (e) => {
         e.preventDefault();
-        // console.log(searchTerm)
         props.handleSearch(searchTerm);
     }
 

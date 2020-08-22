@@ -10,6 +10,7 @@ const SearchHistoryItem = (props) => {
             <p>{search.searchTerm}</p>
             <Moment fromNow>{search.time}</Moment>
             <Button onClick={() => props.handleSearch(search.searchTerm)}>Open results</Button>
+            <hr />
         </div>
     );
 }
