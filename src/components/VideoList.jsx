@@ -17,8 +17,11 @@ const VideoList = (props) => {
         <div>
             {props.selectVideo !== null && <h6>Related videos</h6>}
             <hr className="mt-3 mb-3" />
-            {videoItems}
+            <div class="video-list">
+                {videoItems}
+            </div>
         </div>
+
     );
 }
 

@@ -8,7 +8,7 @@ import SearchHistoryList from './components/SearchHistoryList';
 import RecommVideosList from './components/RecommVideosList';
 import videos from './videos.json';
 import recommVideosDeploy from './recommVideosDeploy.json';
-import { Image, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import {
   BrowserRouter as Router,
   Route
@@ -104,7 +104,7 @@ const App = () => {
           });
 
           if (newVideosData.length === 2) {
-            let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]")
+            let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
 
             let match = false;
             for (let i = 0; i < recommendedVideos.length; i++) {
@@ -127,7 +127,7 @@ const App = () => {
           }
           // PROMISES
           if (newVideosData.length === videos.length) {
-            setVideosData(newVideosData)
+            setVideosData(newVideosData);
           }
         });
     });
@@ -298,7 +298,6 @@ const App = () => {
           <Sidebar />
         </Col>
         <Col>
-          <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
           <Router>
             <Route
               path="/liked-videos"

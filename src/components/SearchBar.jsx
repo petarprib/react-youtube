@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, InputGroup, Col, FormGroup } from 'react-bootstrap';
 
 const SearchBar = (props) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -10,18 +10,29 @@ const SearchBar = (props) => {
 
     let handleSubmit = (e) => {
         e.preventDefault();
-        props.handleSearch(searchTerm);
+        if (searchTerm !== "") {
+            props.handleSearch(searchTerm);
+        }
     }
 
     return (
-        <Form onSubmit={(e) => handleSubmit(e)}>
-            <Form.Group>
-                <Form.Control
-                    onChange={(e) => handleChange(e)}
-                    value={searchTerm}
-                />
-                <Button type="submit">Search</Button>
-            </Form.Group>
+        <Form className="mt-3" onSubmit={(e) => handleSubmit(e)}>
+            <FormGroup>
+                <InputGroup className="px-0 col-sm-12 col-md-6">
+                    <Form.Control
+                        className="shadow-none"
+                        size="sm"
+                        placeholder="Search"
+                        onChange={(e) => handleChange(e)}
+                        value={searchTerm}
+                    />
+                    <InputGroup.Append>
+                        <Button id="searchButton" className="shadow-none" size="sm" type="submit">
+                            <i className="fas fa-search"></i>
+                        </Button>
+                    </InputGroup.Append>
+                </InputGroup>
+            </FormGroup>
         </Form >
     );
 }

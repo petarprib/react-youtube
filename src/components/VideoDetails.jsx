@@ -26,8 +26,6 @@ const VideoDetails = (props) => {
         }
     }
 
-    // console.log(selectVideo.description.join("").length)
-
     let description = selectVideo.description.map((descrBlock, i) => {
         return <p key={i}>{descrBlock}</p>
     });

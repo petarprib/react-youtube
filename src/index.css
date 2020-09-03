@@ -2,8 +2,23 @@
   width: 100px;
 }
 
+.video-list {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
 .pointer {
   cursor: pointer;
+}
+
+#searchButton {
+  width: 60px;
+  border-color: #696969;
+  background-color: #696969;
+}
+
+.recommVidsDetails {
+  min-height: 100px;
 }
 
 .videosTitle {
