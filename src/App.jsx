@@ -24,12 +24,14 @@ import 'moment-timezone';
 
 // ROUTING, SIDEBAR, HOOKS
 
+// OSTAVLJAT KOMENTARE
+
 // zašto na recommVideos ne radi space-evenly, ellipsis opis videa, kako napravit sidebar
 
 const DEPLOYMENT = true;
 
-const API_KEY = 'AIzaSyDFAIjZGo9iGwkwW1x1mSQCQtw7EWS9fQI';
-// const API_KEY2 = 'AIzaSyDB8iXT-06-yEWVcXaDkRZ_LWQ4nbsvg24';
+const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+const API_KEY2 = process.env.REACT_APP_WEATHER_API_KEY2;
 
 // HIDE THE API KEY
 
