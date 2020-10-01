@@ -26,10 +26,6 @@ const VideoDetails = (props) => {
         }
     }
 
-    let description = selectVideo.description.map((descrBlock, i) => {
-        return <p key={i}>{descrBlock}</p>
-    });
-
     return (
         <div id="select-video">
             <div className="embed-responsive embed-responsive-16by9 mb-2">
@@ -68,7 +64,7 @@ const VideoDetails = (props) => {
                 </Col>
             </Row>
             <hr className="mt-2 mb-2" />
-            {description}
+            {selectVideo.description}
         </div>
     );
 }
