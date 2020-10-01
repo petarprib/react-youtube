@@ -7,12 +7,12 @@ const Sidebar = () => {
             <Nav>
                 <ul className="list-group">
                     <a href="http://localhost:3000/"><Image src="ytlogo.svg" className="ytlogo" /></a>
-                    <li className="sidebarItems">
+                    <li className="sidebar-items">
                         <Nav.Item>
                             <Nav.Link href="/liked-videos" className="pl-0">Liked videos</Nav.Link>
                         </Nav.Item>
                     </li>
-                    <li className="sidebarItems">
+                    <li className="sidebar-items">
                         <Nav.Item>
                             <Nav.Link href="/search-history" className="pl-0">Search history</Nav.Link>
                         </Nav.Item>

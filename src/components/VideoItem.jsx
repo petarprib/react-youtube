@@ -20,14 +20,16 @@ const VideoItem = (props) => {
     }
 
     return (
-        <Row className="pointer mb-4 videoItem" onClick={() => props.handleVideoSelect(video)}>
+        <Row className="pointer mb-4 video-item" onClick={() => props.handleVideoSelect(video)}>
             {thumbnail}
             <Col className="pl-0">
-                <p className="videosTitle mb-0 text-truncate">{video.title}</p>
-                <p className="videosDetails d-inline mr-1 mb-0">{parseInt(video.viewCount).toLocaleString()} views</p>
-                <p className="videosDetails d-inline mr-1 mb-0">•</p>
-                <Moment fromNow className="videosDetails d-inline">{video.publishedAt}</Moment>
-                <p className="videosDescr">{selectVideo === null && video.description}</p>
+                <p className="videos-title mb-0 text-truncate">{video.title}</p>
+                <p className="videos-details d-inline mr-1 mb-0">{parseInt(video.viewCount).toLocaleString()} views</p>
+                <p className="videos-details d-inline mr-1 mb-0">•</p>
+                <Moment fromNow className="videos-details d-inline">{video.publishedAt}</Moment>
+                <div>
+                    <p className="videos-descr">{selectVideo === null && video.description}</p>
+                </div>
             </Col>
         </Row>
     );

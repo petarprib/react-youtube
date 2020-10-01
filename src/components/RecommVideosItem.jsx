@@ -11,13 +11,13 @@ const RecommVideosItem = (props) => {
                 <img src={video.thumbnailMedium} alt={`${video.id}`} className="w-100" />
             </div>
             <div
-                className="pointer recommVidsDetails pt-1"
+                className="pointer recomm-vids-details pt-1"
                 onClick={() => props.handleVideoSelect(video)}
             >
-                <p className="videosTitle mb-0">{video.title}</p>
-                <p className="videosDetails d-inline mr-1">{parseInt(video.viewCount).toLocaleString()} views</p>
-                <p className="videosDetails d-inline mr-1">•</p>
-                <Moment fromNow className="videosDetails d-inline">{video.publishedAt}</Moment>
+                <p className="videos-title mb-0">{video.title}</p>
+                <p className="videos-details d-inline mr-1">{parseInt(video.viewCount).toLocaleString()} views</p>
+                <p className="videos-details d-inline mr-1">•</p>
+                <Moment fromNow className="videos-details d-inline">{video.publishedAt}</Moment>
             </div>
         </Col>
     );

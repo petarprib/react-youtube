@@ -21,7 +21,7 @@ const RecommVideosList = (props) => {
 
     return (
         <div>
-            <h4 className="pageHeading mb-3">Recommended</h4>
+            <h4 className="page-heading mb-3">Recommended</h4>
             <Row>
                 {recommVideos}
             </Row>

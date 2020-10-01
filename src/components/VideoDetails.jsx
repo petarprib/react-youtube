@@ -31,7 +31,7 @@ const VideoDetails = (props) => {
     });
 
     return (
-        <div id="selectVideo">
+        <div id="select-video">
             <div className="embed-responsive embed-responsive-16by9 mb-2">
                 <iframe
                     title={selectVideo.title}
@@ -41,12 +41,12 @@ const VideoDetails = (props) => {
                     allowFullScreen
                 ></iframe>
             </div>
-            <h1 id="selectVideoTitle">{selectVideo.title}</h1>
+            <h1 id="select-video-title">{selectVideo.title}</h1>
             <Row>
                 <Col>
-                    <p className="selectVideoDetails d-inline mr-1">{parseInt(selectVideo.viewCount).toLocaleString()} views</p>
-                    <p className="selectVideoDetails d-inline mr-1">•</p>
-                    <Moment format="MMM DD, YYYY" className="selectVideoDetails d-inline">{selectVideo.publishedAt}</Moment>
+                    <p className="select-video-details d-inline mr-1">{parseInt(selectVideo.viewCount).toLocaleString()} views</p>
+                    <p className="select-video-details d-inline mr-1">•</p>
+                    <Moment format="MMM DD, YYYY" className="select-video-details d-inline">{selectVideo.publishedAt}</Moment>
                 </Col>
                 <Col className="text-right">
                     <i
@@ -54,7 +54,7 @@ const VideoDetails = (props) => {
                         style={{ color: likeColor }}
                         onClick={() => props.handleLike(selectVideo)}
                     ></i>
-                    <p className="mr-3 d-inline selectVideoDetails">
+                    <p className="mr-3 d-inline select-video-details">
                         {Math.abs(likeCount) > 999 ? `${Math.sign(likeCount) * ((Math.abs(likeCount) / 1000).toFixed(1))}K` : Math.sign(likeCount) * Math.abs(likeCount)}
                     </p>
                     <i
@@ -62,7 +62,7 @@ const VideoDetails = (props) => {
                         style={{ color: dislikeColor }}
                         onClick={() => props.handleDislike(selectVideo)}
                     ></i>
-                    <p className="d-inline selectVideoDetails">
+                    <p className="d-inline select-video-details">
                         {Math.abs(dislikeCount) > 999 ? `${Math.sign(dislikeCount) * ((Math.abs(dislikeCount) / 1000).toFixed(1))}K` : Math.sign(dislikeCount) * Math.abs(dislikeCount)}
                     </p>
                 </Col>

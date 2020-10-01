@@ -9,31 +9,14 @@ import RecommVideosList from './components/RecommVideosList';
 import videos from './videos.json';
 import recommVideosDeploy from './recommVideosDeploy.json';
 import { Container, Row, Col } from 'react-bootstrap';
-import {
-  BrowserRouter as Router,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import moment from 'moment';
 import 'moment-timezone';
 
-// M19: 1h/dia LO MÁS IMPORTANTE
-// M10: clone de evernote después de youtube 1-2 dias
-// Repaso general al temario: 5-7 días (TODO: testing, debugar, librerías UI, HTTP, sin redux…) REPASA PUNTOS IMPORTANTES CURSO SCRIMBA DEL M10
-// REPASO HOOKS Y LUEGO CONVERTIR EL PROYECTO
-// M18: ejemplo app pizzas
-
-// ROUTING, SIDEBAR, HOOKS
-
-// OSTAVLJAT KOMENTARE
-
-// zašto na recommVideos ne radi space-evenly, ellipsis opis videa, kako napravit sidebar
-
 const DEPLOYMENT = true;
 
-const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-const API_KEY2 = process.env.REACT_APP_WEATHER_API_KEY2;
-
-// HIDE THE API KEY
+const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY2 = process.env.REACT_APP_API_KEY2;
 
 const App = () => {
   const [videosData, setVideosData] = useState([]);
@@ -43,6 +26,9 @@ const App = () => {
   const [searchHistory, setSearchHistory] = useState(JSON.parse(localStorage.getItem("searchHistory") || "[]"));
   const [recommendedVideos, setRecommendedVideos] = useState([]);
 
+  /**
+    * @desc loads videos.json if deployment true, otherwise uses API key
+  */
   useEffect(() => {
     if (DEPLOYMENT === true) {
       setVideosData(videos.videos);
@@ -55,6 +41,11 @@ const App = () => {
     }
   }, []);
 
+  /**
+    * @desc handles search term
+    * @param string searchTerm - input string
+    * @return void
+  */
   let handleSearch = (searchTerm) => {
     let newSearchHistory = searchHistory;
     newSearchHistory.push({
@@ -66,7 +57,6 @@ const App = () => {
 
     setSelectedVideo(null);
 
-    // HAVE CHANGED MAX RESULTS FROM 20 TO 3
     const MODIFIED_SEARCH = searchTerm.replace(/ /g, "+");
     const SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?q=${MODIFIED_SEARCH}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY}`;
 
@@ -77,6 +67,11 @@ const App = () => {
       });
   }
 
+  /**
+    * @desc fetches video duration/views/likes and prevents duplicates in recommendedVideos
+    * @param array videos - array of video data objects
+    * @return void
+  */
   let fetchVideosStats = (videos) => {
     let newVideosData = [];
 
@@ -89,11 +84,9 @@ const App = () => {
           newVideosData.push({
             id: video.id.videoId,
             title: video.snippet.title,
-            //Description provided by the Youtube API is just a shortened string without the entire content or paragraphs
+            // description provided by the Youtube API is just a shortened string without the entire content or paragraphs
             description: [
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut nulla venenatis nunc rutrum finibus vel quis sapien. Proin blandit est quis vestibulum imperdiet. Vivamus vitae enim placerat, tempor libero sed, commodo velit. Mauris tempor enim at nibh finibus, efficitur ultrices est vestibulum. Donec facilisis vel tellus at molestie. Mauris et mi ligula. In erat purus, scelerisque quis ex sed, consequat posuere justo.",
-              "Nulla luctus est non molestie convallis. Curabitur sed nulla massa. Sed elementum, diam id tempus ornare, ipsum libero placerat urna, quis finibus elit metus vitae tellus. Suspendisse mattis volutpat lacus auctor sodales. Proin eget quam quis nunc suscipit elementum. Quisque porta eget ligula convallis consequat. Vestibulum commodo, sem ac hendrerit rhoncus, eros diam cursus orci, at pellentesque leo magna non ex. Mauris vel suscipit erat. Praesent facilisis leo volutpat, tincidunt nulla id, maximus eros.",
-              "Aenean rutrum eu enim a ullamcorper. Sed quis felis eu lacus ultrices commodo quis vitae eros. Etiam dapibus venenatis justo, id sodales elit molestie ac. Maecenas blandit tincidunt rutrum. Phasellus interdum erat vel elit dictum pellentesque. Praesent consectetur velit non arcu dignissim, ut hendrerit sem malesuada. Aenean vulputate augue et mi tempus vehicula. Donec in mollis felis. In pellentesque ullamcorper magna, sed condimentum."
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut nulla venenatis nunc rutrum finibus vel quis sapien. Proin blandit est quis vestibulum imperdiet. Vivamus vitae enim placerat, tempor libero sed, commodo velit. Mauris tempor enim at nibh finibus, efficitur ultrices est vestibulum. Donec facilisis vel tellus at molestie. Mauris et mi ligula. In erat purus, scelerisque quis ex sed, consequat posuere justo. Nulla luctus est non molestie convallis. Curabitur sed nulla massa. Sed elementum, diam id tempus ornare, ipsum libero placerat urna, quis finibus elit metus vitae tellus. Suspendisse mattis volutpat lacus auctor sodales. Proin eget quam quis nunc suscipit elementum. Quisque porta eget ligula convallis consequat. Vestibulum commodo, sem ac hendrerit rhoncus, eros diam cursus orci, at pellentesque leo magna non ex. Mauris vel suscipit erat. Praesent facilisis leo volutpat, tincidunt nulla id, maximus eros. Aenean rutrum eu enim a ullamcorper. Sed quis felis eu lacus ultrices commodo quis vitae eros. Etiam dapibus venenatis justo, id sodales elit molestie ac. Maecenas blandit tincidunt rutrum. Phasellus interdum erat vel elit dictum pellentesque. Praesent consectetur velit non arcu dignissim, ut hendrerit sem malesuada. Aenean vulputate augue et mi tempus vehicula. Donec in mollis felis. In pellentesque ullamcorper magna, sed condimentum."
             ],
             publishedAt: video.snippet.publishedAt,
             thumbnailDefault: video.snippet.thumbnails.default.url,
@@ -105,6 +98,7 @@ const App = () => {
             dislikeCount: data.items[0].statistics.dislikeCount
           });
 
+          // prevents adding same video into recommendedVideos more than once
           if (newVideosData.length === 2) {
             let recommendedVideos = JSON.parse(localStorage.getItem("recommendedVideos") || "[]");
 
@@ -119,6 +113,7 @@ const App = () => {
               if (match) break;
             }
 
+            // adds video to recommendedVideos
             if (!match) {
               if (recommendedVideos.length === 12) {
                 recommendedVideos.splice(0, 2);
@@ -127,7 +122,7 @@ const App = () => {
               localStorage.setItem("recommendedVideos", JSON.stringify(recommendedVideos));
             }
           }
-          // PROMISES
+
           if (newVideosData.length === videos.length) {
             setVideosData(newVideosData);
           }
@@ -135,8 +130,13 @@ const App = () => {
     });
   }
 
+  /**
+    * @desc fetches videos related to selected video, their duration/views/likes and loads video
+    * @param object video - video data object
+    * @return void
+  */
   let handleVideoSelect = (video) => {
-    // HAVE CHANGED MAX RESULTS FROM 20 TO 3
+    // fetches related videos
     if (DEPLOYMENT === false) {
       const RELATED_URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${video.id}&type=video&order=relevance&maxResults=3&key=${API_KEY}`;
 
@@ -150,14 +150,21 @@ const App = () => {
     setSelectedVideo(video);
   }
 
+  /**
+    * @desc adds to liked videos
+    * @param object selectedVideo - video data object
+    * @return void
+  */
   let handleLike = (selectedVideo) => {
     let newLikedVideos = likedVideos;
 
     if (!likedVideos.length) {
+      // adds to liked videos
       newLikedVideos.push(selectedVideo);
       localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
       setLikedVideos(newLikedVideos);
 
+      // removes it form disliked videos
       if (dislikedVideos.length) {
         removeDislike(selectedVideo);
       }
@@ -171,13 +178,16 @@ const App = () => {
         }
       }
 
+      // removes like if already liked
       if (likedIndex !== undefined) {
         removeLike(selectedVideo);
       } else {
+        // adds to liked videos
         newLikedVideos.push(selectedVideo);
         localStorage.setItem("likedVideos", JSON.stringify(newLikedVideos));
         setLikedVideos(newLikedVideos);
 
+        // removes it form disliked videos
         if (dislikedVideos.length) {
           removeDislike(selectedVideo);
         }
@@ -185,6 +195,11 @@ const App = () => {
     }
   }
 
+  /**
+    * @desc adds to disliked videos
+    * @param object selectedVideo - video data object
+    * @return void
+  */
   let handleDislike = (selectedVideo) => {
     // let { dislikedVideos, likedVideos } = this.state;
     let newDislikedVideos = dislikedVideos;
@@ -221,6 +236,11 @@ const App = () => {
     }
   }
 
+  /**
+    * @desc handleLike/handleDislike helper method
+    * @param object selectedVideo - video data object
+    * @return void
+  */
   let removeLike = (selectedVideo) => {
     // let { likedVideos } = this.state;
     let newLikedVideos = likedVideos;
@@ -234,6 +254,11 @@ const App = () => {
     }
   }
 
+  /**
+    * @desc handleLike/handleDislike helper method
+    * @param object selectedVideo - video data object
+    * @return void
+  */
   let removeDislike = (selectedVideo) => {
     // let { dislikedVideos } = this.state;
     let newDislikedVideos = dislikedVideos;
@@ -296,7 +321,7 @@ const App = () => {
   return (
     <Container fluid>
       <Row>
-        <Col id="sidebar" className="pr-0">
+        <Col id="sidebar" className="pr-0 d-none d-lg-block">
           <Sidebar />
         </Col>
         <Col>

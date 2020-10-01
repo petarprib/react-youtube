@@ -27,7 +27,7 @@ const SearchBar = (props) => {
                         value={searchTerm}
                     />
                     <InputGroup.Append>
-                        <Button id="searchButton" className="shadow-none" size="sm" type="submit">
+                        <Button id="search-button" className="shadow-none" size="sm" type="submit">
                             <i className="fas fa-search"></i>
                         </Button>
                     </InputGroup.Append>
