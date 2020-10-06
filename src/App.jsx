@@ -199,7 +199,6 @@ const App = () => {
     * @return void
   */
   let handleDislike = (selectedVideo) => {
-    // let { dislikedVideos, likedVideos } = this.state;
     let newDislikedVideos = dislikedVideos;
 
     if (!dislikedVideos.length) {
@@ -240,7 +239,6 @@ const App = () => {
     * @return void
   */
   let removeLike = (selectedVideo) => {
-    // let { likedVideos } = this.state;
     let newLikedVideos = likedVideos;
 
     for (let i = 0; i < likedVideos.length; i++) {
@@ -258,7 +256,6 @@ const App = () => {
     * @return void
   */
   let removeDislike = (selectedVideo) => {
-    // let { dislikedVideos } = this.state;
     let newDislikedVideos = dislikedVideos;
 
     for (let i = 0; i < dislikedVideos.length; i++) {
