@@ -1,8 +1,10 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Row, Col } from 'react-bootstrap';
 import Moment from 'react-moment';
 
 const VideoItem = (props) => {
+    const { push } = useHistory();
     let { video, selectVideo } = props;
 
     let thumbnail;
@@ -20,7 +22,10 @@ const VideoItem = (props) => {
     }
 
     return (
-        <Row className="pointer mb-4 video-item" onClick={() => props.handleVideoSelect(video)}>
+        <Row className="pointer mb-4 video-item" onClick={() => {
+            props.handleVideoSelect(video);
+            push(`/video/${video.id}`);
+        }}>
             {thumbnail}
             <Col className="pl-0">
                 <p className="videos-title mb-0 text-truncate">{video.title}</p>

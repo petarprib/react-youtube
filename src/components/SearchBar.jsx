@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Form, Button, InputGroup, FormGroup } from 'react-bootstrap';
 
 const SearchBar = (props) => {
+    const { push } = useHistory();
     const [searchTerm, setSearchTerm] = useState("");
 
     let handleChange = (e) => {
@@ -10,8 +12,10 @@ const SearchBar = (props) => {
 
     let handleSubmit = (e) => {
         e.preventDefault();
+        const MODIFIED_SEARCH = searchTerm.replace(/ /g, "+");
         if (searchTerm !== "") {
             props.handleSearch(searchTerm);
+            push(`/results/${MODIFIED_SEARCH}`);
         }
     }
 
