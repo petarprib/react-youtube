@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./index.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import moment from "moment";
@@ -10,14 +11,16 @@ import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
 import LikedVideoList from "./components/LikedVideos/LikedVideoList.jsx";
 import SearchHistoryList from "./components/SearchHistory/SearchHistoryList.jsx";
 import deploymentVideos from "./deploymentVideos.json";
+import Backdrop from "./components/Backdrop/Backdrop";
 
-const DEPLOYMENT = false;
+const DEPLOYMENT = true;
 
 const API_KEY = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
 const API_KEY2 = "AIzaSyBOWXkq4-Ufhafp87T1uSwdfleNVrb_5Ys";
 const API_KEY3 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
 
 const App = () => {
+  const [sidebar, setSidebar] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState({});
   const [relatedVideos, setRelatedVideos] = useState([]);
@@ -49,6 +52,8 @@ const App = () => {
     }
   }, []);
 
+  const showSidebar = () => setSidebar(!sidebar);
+
   let handleSearchHistory = (searchTerm) => {
     let newSearchHistory = searchHistory;
     newSearchHistory.push({
@@ -64,7 +69,7 @@ const App = () => {
 
     videos.data.forEach((video) => {
       fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY}`
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY2}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -125,7 +130,7 @@ const App = () => {
 
   let handleSearch = (searchTerm) => {
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY2}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -135,7 +140,7 @@ const App = () => {
 
   let handleVideoSelect = (videoId) => {
     fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY}`
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY2}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -161,7 +166,7 @@ const App = () => {
 
   let fetchRelatedVideos = (videoId) => {
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=3&key=${API_KEY}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=3&key=${API_KEY2}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -274,59 +279,63 @@ const App = () => {
     }
   };
 
+  //   let sidedrawer;
+  //   let backdrop;
+
+  // if(sidebar) {
+
+  // }
+
   return (
     <Router>
-      <Container fluid>
+      <Container fluid id="app">
         <Row>
-          <Col id="sidebar" className="pr-0 d-none d-lg-block">
-            <Sidebar />
+          <Col xs={1}>
+            <Sidebar sidebar={sidebar} showSidebar={() => showSidebar()} />
           </Col>
-          <Col>
+          <Col xs={11}>
             <SearchBar
               handleSearchHistory={(searchTerm) =>
                 handleSearchHistory(searchTerm)
               }
             />
-            <Switch>
-              <Route
-                path="/liked-videos"
-                render={() => <LikedVideoList likedVideos={likedVideos} />}
-              />
-              <Route
-                path="/search-history"
-                render={() => (
-                  <SearchHistoryList searchHistory={searchHistory} />
-                )}
-              />
-              <Route
-                path="/results/:searchTerm"
-                render={() => (
-                  <SearchResultList
-                    DEPLOYMENT={DEPLOYMENT}
-                    searchResults={searchResults}
-                    handleSearch={(searchTerm) => handleSearch(searchTerm)}
-                  />
-                )}
-              />
-              <Route
-                path="/video/:videoId"
-                render={() => (
-                  <SelectedVideo
-                    DEPLOYMENT={DEPLOYMENT}
-                    selectedVideo={selectedVideo}
-                    relatedVideos={relatedVideos}
-                    likedVideos={likedVideos}
-                    dislikedVideos={dislikedVideos}
-                    handleLike={(selectedVideo) => handleLike(selectedVideo)}
-                    handleDislike={(selectedVideo) =>
-                      handleDislike(selectedVideo)
-                    }
-                  />
-                )}
-              />
-            </Switch>
           </Col>
         </Row>
+        <Backdrop sidebar={sidebar} />
+        <Switch>
+          <Route
+            path="/liked-videos"
+            render={() => <LikedVideoList likedVideos={likedVideos} />}
+          />
+          <Route
+            path="/search-history"
+            render={() => <SearchHistoryList searchHistory={searchHistory} />}
+          />
+          <Route
+            path="/results/:searchTerm"
+            render={() => (
+              <SearchResultList
+                DEPLOYMENT={DEPLOYMENT}
+                searchResults={searchResults}
+                handleSearch={(searchTerm) => handleSearch(searchTerm)}
+              />
+            )}
+          />
+          <Route
+            path="/video/:videoId"
+            render={() => (
+              <SelectedVideo
+                DEPLOYMENT={DEPLOYMENT}
+                selectedVideo={selectedVideo}
+                relatedVideos={relatedVideos}
+                likedVideos={likedVideos}
+                dislikedVideos={dislikedVideos}
+                handleLike={(selectedVideo) => handleLike(selectedVideo)}
+                handleDislike={(selectedVideo) => handleDislike(selectedVideo)}
+              />
+            )}
+          />
+        </Switch>
       </Container>
     </Router>
   );

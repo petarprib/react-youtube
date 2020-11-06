@@ -1,31 +1,16 @@
-import React from "react";
-import { Image, Navbar, Nav } from "react-bootstrap";
+import React, { useState } from "react";
+// import { Image, Navbar, Nav } from "react-bootstrap";
+import "./Sidebar.css";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   return (
-    <Navbar className="pl-0">
-      <Nav>
-        <ul className="list-group">
-          <a href="/">
-            <Image src="ytlogo.svg" className="ytlogo" />
-          </a>
-          <li className="sidebar-items">
-            <Nav.Item>
-              <Nav.Link href="/liked-videos" className="pl-0">
-                Liked videos
-              </Nav.Link>
-            </Nav.Item>
-          </li>
-          <li className="sidebar-items">
-            <Nav.Item>
-              <Nav.Link href="/search-history" className="pl-0">
-                Search history
-              </Nav.Link>
-            </Nav.Item>
-          </li>
-        </ul>
-      </Nav>
-    </Navbar>
+    <div>
+      <i className="fas fa-bars" onClick={() => props.showSidebar()}></i>
+      <nav className={props.sidebar ? "nav-menu active" : "nav-menu"}>
+        <i className="fas fa-times" onClick={() => props.showSidebar()}></i>
+        <p>Content</p>
+      </nav>
+    </div>
   );
 };
 

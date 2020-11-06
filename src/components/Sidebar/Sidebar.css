@@ -1,0 +1,25 @@
+.nav-menu {
+    background-color: white;
+    border-right: #ced4da solid 1px;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: 850ms;
+    z-index: 200;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.nav-menu.active {
+    left: 0;
+    transition: 350ms;
+    z-index: 1;
+}
+
+.fa {
+    font-size: 1.5rem;
+}
