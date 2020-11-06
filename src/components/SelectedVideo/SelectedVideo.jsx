@@ -1,61 +1,68 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
 import { Row, Col } from "react-bootstrap";
 import Moment from "react-moment";
+import RelatedVideoList from "../RelatedVideos/RelatedVideoList.jsx";
 
-const VideoDetails = (props) => {
-  let { selectVideo, likedVids, dislikedVids } = props;
+const SelectedVideo = (props) => {
+  const { videoId } = useParams();
+  const { selectedVideo, relatedVideos, likedVideos, dislikedVideos } = props;
 
-  let likeCount = parseInt(selectVideo.likeCount);
+  let likeCount = parseInt(selectedVideo.likeCount);
   let likeColor = "#606060";
-  let dislikeCount = parseInt(selectVideo.dislikeCount);
+  let dislikeCount = parseInt(selectedVideo.dislikeCount);
   let dislikeColor = "#606060";
 
-  for (let i = 0; i < likedVids.length; i++) {
-    if (selectVideo.id === likedVids[i].id) {
+  for (let i = 0; i < likedVideos.length; i++) {
+    if (selectedVideo.id === likedVideos[i].id) {
       likeCount += 1;
-      likeColor = "#008000";
+      likeColor = "#32CD32";
       break;
     }
   }
 
-  for (let i = 0; i < dislikedVids.length; i++) {
-    if (selectVideo.id === dislikedVids[i].id) {
+  for (let i = 0; i < dislikedVideos.length; i++) {
+    if (selectedVideo.id === dislikedVideos[i].id) {
       dislikeCount += 1;
       dislikeColor = "#FF0000";
       break;
     }
   }
 
+  useEffect(() => {
+    if (props.DEPLOYMENT === false) props.handleVideoSelect(videoId);
+  }, [videoId]);
+
   return (
     <div id="select-video">
       <div className="embed-responsive embed-responsive-16by9 mb-2">
         <iframe
-          title={selectVideo.title}
-          src={`https://www.youtube.com/embed/${selectVideo.id}`}
+          title={selectedVideo.title}
+          src={`https://www.youtube.com/embed/${selectedVideo.id}`}
           frameBorder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
       </div>
-      <h1 id="select-video-title">{selectVideo.title}</h1>
+      <h1 id="select-video-title">{selectedVideo.title}</h1>
       <Row>
         <Col>
           <p className="select-video-details d-inline mr-1">
-            {parseInt(selectVideo.viewCount).toLocaleString()} views
+            {parseInt(selectedVideo.viewCount).toLocaleString()} views
           </p>
           <p className="select-video-details d-inline mr-1">•</p>
           <Moment
             format="MMM DD, YYYY"
             className="select-video-details d-inline"
           >
-            {selectVideo.publishedAt}
+            {selectedVideo.publishedAt}
           </Moment>
         </Col>
         <Col className="text-right">
           <i
             className="fas fa-thumbs-up mr-1 d-inline"
             style={{ color: likeColor }}
-            onClick={() => props.handleLike(selectVideo)}
+            onClick={() => props.handleLike(selectedVideo)}
           ></i>
           <p className="mr-3 d-inline select-video-details">
             {Math.abs(likeCount) > 999
@@ -67,7 +74,7 @@ const VideoDetails = (props) => {
           <i
             className="fas fa-thumbs-down mr-1 d-inline"
             style={{ color: dislikeColor }}
-            onClick={() => props.handleDislike(selectVideo)}
+            onClick={() => props.handleDislike(selectedVideo)}
           ></i>
           <p className="d-inline select-video-details">
             {Math.abs(dislikeCount) > 999
@@ -80,9 +87,12 @@ const VideoDetails = (props) => {
         </Col>
       </Row>
       <hr className="mt-2 mb-2" />
-      {selectVideo.description}
+      {selectedVideo.description}
+      <div>
+        <RelatedVideoList relatedVideos={relatedVideos} />
+      </div>
     </div>
   );
 };
 
-export default VideoDetails;
+export default SelectedVideo;
