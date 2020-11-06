@@ -11,7 +11,7 @@ import LikedVideoList from "./components/LikedVideos/LikedVideoList.jsx";
 import SearchHistoryList from "./components/SearchHistory/SearchHistoryList.jsx";
 import deploymentVideos from "./deploymentVideos.json";
 
-const DEPLOYMENT = true;
+const DEPLOYMENT = false;
 
 const API_KEY = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
 const API_KEY2 = "AIzaSyBOWXkq4-Ufhafp87T1uSwdfleNVrb_5Ys";
@@ -64,7 +64,7 @@ const App = () => {
 
     videos.data.forEach((video) => {
       fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY3}`
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -125,7 +125,7 @@ const App = () => {
 
   let handleSearch = (searchTerm) => {
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY3}`
+      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -135,7 +135,7 @@ const App = () => {
 
   let handleVideoSelect = (videoId) => {
     fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY3}`
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -161,7 +161,7 @@ const App = () => {
 
   let fetchRelatedVideos = (videoId) => {
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=3&key=${API_KEY3}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=3&key=${API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
