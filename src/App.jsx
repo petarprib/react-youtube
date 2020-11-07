@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import moment from "moment";
 import "moment-timezone";
-import Sidebar from "./components/Sidebar/Sidebar.jsx";
-import SearchBar from "./components/Searchbar/Searchbar.jsx";
-import SearchResultList from "./components/SearchResults/SearchResultList.jsx";
-import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
-import LikedVideoList from "./components/LikedVideos/LikedVideoList.jsx";
-import SearchHistoryList from "./components/SearchHistory/SearchHistoryList.jsx";
 import deploymentVideos from "./deploymentVideos.json";
 import Backdrop from "./components/Backdrop/Backdrop";
+import Header from "./components/Header/Header";
+import LikedVideoList from "./components/LikedVideos/LikedVideoList.jsx";
+import SearchHistoryList from "./components/SearchHistory/SearchHistoryList.jsx";
+import SearchResultList from "./components/SearchResults/SearchResultList.jsx";
+import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
-const DEPLOYMENT = true;
+const DEPLOYMENT = false;
 
 const API_KEY = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
-const API_KEY2 = "AIzaSyBOWXkq4-Ufhafp87T1uSwdfleNVrb_5Ys";
-const API_KEY3 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
+const API_KEY2 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
+const API_KEY3 = "AIzaSyBOWXkq4-Ufhafp87T1uSwdfleNVrb_5Ys";
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -74,12 +74,12 @@ const App = () => {
         .then((response) => response.json())
         .then((data) => {
           newVideos.push({
+            // description provided by the Youtube API is just a shortened string without the entire content
             description:
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ut nulla venenatis nunc rutrum finibus vel quis sapien. Proin blandit est quis vestibulum imperdiet. Vivamus vitae enim placerat, tempor libero sed, commodo velit. Mauris tempor enim at nibh finibus, efficitur ultrices est vestibulum. Donec facilisis vel tellus at molestie. Mauris et mi ligula. In erat purus, scelerisque quis ex sed, consequat posuere justo. Nulla luctus est non molestie convallis. Curabitur sed nulla massa. Sed elementum, diam id tempus ornare, ipsum libero placerat urna, quis finibus elit metus vitae tellus. Suspendisse mattis volutpat lacus auctor sodales. Proin eget quam quis nunc suscipit elementum. Quisque porta eget ligula convallis consequat. Vestibulum commodo, sem ac hendrerit rhoncus, eros diam cursus orci, at pellentesque leo magna non ex. Mauris vel suscipit erat. Praesent facilisis leo volutpat, tincidunt nulla id, maximus eros. Aenean rutrum eu enim a ullamcorper. Sed quis felis eu lacus ultrices commodo quis vitae eros. Etiam dapibus venenatis justo, id sodales elit molestie ac. Maecenas blandit tincidunt rutrum. Phasellus interdum erat vel elit dictum pellentesque. Praesent consectetur velit non arcu dignissim, ut hendrerit sem malesuada. Aenean vulputate augue et mi tempus vehicula. Donec in mollis felis. In pellentesque ullamcorper magna, sed condimentum.",
             duration: data.items[0].contentDetails.duration,
             id: video.id.videoId,
             publishedAt: video.snippet.publishedAt,
-            // description provided by the Youtube API is just a shortened string without the entire content
             thumbnailDefault: video.snippet.thumbnails.default.url,
             thumbnailHigh: video.snippet.thumbnails.high.url,
             thumbnailMedium: video.snippet.thumbnails.medium.url,
@@ -279,29 +279,15 @@ const App = () => {
     }
   };
 
-  //   let sidedrawer;
-  //   let backdrop;
-
-  // if(sidebar) {
-
-  // }
-
   return (
     <Router>
-      <Container fluid id="app">
-        <Row>
-          <Col xs={1}>
-            <Sidebar sidebar={sidebar} showSidebar={() => showSidebar()} />
-          </Col>
-          <Col xs={11}>
-            <SearchBar
-              handleSearchHistory={(searchTerm) =>
-                handleSearchHistory(searchTerm)
-              }
-            />
-          </Col>
-        </Row>
-        <Backdrop sidebar={sidebar} />
+      <Container fluid>
+        <Sidebar sidebar={sidebar} showSidebar={() => showSidebar()} />
+        {sidebar ? <Backdrop showSidebar={() => showSidebar()} /> : <></>}
+        <Header
+          showSidebar={() => showSidebar()}
+          handleSearchHistory={(searchTerm) => handleSearchHistory(searchTerm)}
+        />
         <Switch>
           <Route
             path="/liked-videos"
@@ -332,6 +318,7 @@ const App = () => {
                 dislikedVideos={dislikedVideos}
                 handleLike={(selectedVideo) => handleLike(selectedVideo)}
                 handleDislike={(selectedVideo) => handleDislike(selectedVideo)}
+                handleVideoSelect={(videoId) => handleVideoSelect(videoId)}
               />
             )}
           />

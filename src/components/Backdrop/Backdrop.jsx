@@ -2,7 +2,7 @@ import React from "react";
 import "./Backdrop.css";
 
 const Backdrop = (props) => {
-  return <div className={props.sidebar ? "backdrop" : "nothing"}></div>;
+  return <div className="backdrop" onClick={() => props.showSidebar()}></div>;
 };
 
 export default Backdrop;
