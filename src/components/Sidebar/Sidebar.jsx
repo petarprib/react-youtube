@@ -15,14 +15,12 @@ const Sidebar = (props) => {
               className="fas fa-times text-center"
               onClick={() => props.showSidebar()}
             ></i>
-            {/* <a href="/"> */}
             <Image
               alt="youtube"
               src="https://ik.imagekit.io/w1xennnidd/ytlogo_NHS_rYhNB.svg"
               className="ytlogo"
               onClick={() => push("/")}
             />
-            {/* </a> */}
           </div>
         </li>
         <li>

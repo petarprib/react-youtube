@@ -21,25 +21,11 @@
   min-height: 100px;
 }
 
-.video-item {
-  overflow: hidden;
-}
-
-.videos-title {
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.videos-details {
-  font-size: 0.75rem;
-  color: #606060;
-}
-
 #select-video-title {
   font-size: 1rem;
 }
 
 .select-video-details {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: #606060;
 }

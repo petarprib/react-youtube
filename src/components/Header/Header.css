@@ -4,5 +4,11 @@
 
 .fa-bars {
     font-size: 1.5rem;
-    margin-right: 30px;
+    margin-right: 10px;
+}
+
+@media (max-width: 575.98px) {
+    #searchbar {
+        padding-left: 0;
+    }
 }

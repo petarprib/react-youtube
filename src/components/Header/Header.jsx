@@ -28,8 +28,14 @@ const SearchBar = (props) => {
   };
 
   return (
-    <Row className="header">
-      <Col xs={4} className="d-flex align-items-center">
+    <Row className="header mb-2">
+      <Col
+        xs={6}
+        sm={4}
+        md={3}
+        xl={4}
+        className="burger-and-logo d-flex align-items-center"
+      >
         <i className="fas fa-bars" onClick={() => props.showSidebar()}></i>
         <Image
           alt="youtube"
@@ -38,10 +44,10 @@ const SearchBar = (props) => {
           onClick={() => push("/")}
         />
       </Col>
-      <Col xs={4}>
+      <Col xs={6} sm={8} md={6} xl={4} id="searchbar">
         <Form className="mt-3" onSubmit={(e) => handleSubmit(e)}>
           <FormGroup>
-            <InputGroup className="px-0 col-sm-12">
+            <InputGroup className="px-0" sm={12}>
               <Form.Control
                 className="shadow-none"
                 size="sm"

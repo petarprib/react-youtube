@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
+import "./SelectedVideo.css";
 import { Row, Col } from "react-bootstrap";
 import Moment from "react-moment";
 import RelatedVideoList from "../RelatedVideos/RelatedVideoList.jsx";
@@ -34,7 +35,7 @@ const SelectedVideo = (props) => {
   }, [videoId]);
 
   return (
-    <div id="select-video">
+    <div>
       <div className="embed-responsive embed-responsive-16by9 mb-2">
         <iframe
           title={selectedVideo.title}

@@ -13,7 +13,7 @@ import SearchResultList from "./components/SearchResults/SearchResultList.jsx";
 import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
-const DEPLOYMENT = false;
+const DEPLOYMENT = true;
 
 const API_KEY = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
 const API_KEY2 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
@@ -52,7 +52,7 @@ const App = () => {
     }
   }, []);
 
-  const showSidebar = () => setSidebar(!sidebar);
+  let showSidebar = () => setSidebar(!sidebar);
 
   let handleSearchHistory = (searchTerm) => {
     let newSearchHistory = searchHistory;
