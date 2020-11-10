@@ -29,7 +29,7 @@ const SearchResultItem = (props) => {
           {video.publishedAt}
         </Moment>
         <div>
-          <p className="videos-descr d-none d-sm-block">
+          <p className="videos-details d-none d-sm-block">
             {video.description.slice(0, 150)}
           </p>
         </div>

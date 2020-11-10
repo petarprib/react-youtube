@@ -92,12 +92,12 @@ const SelectedVideo = (props) => {
             </p>
           </Col>
         </Row>
-        <hr className="mt-2" />
-        <p className="video-descr px-1 p-sm-0">
+        <hr className="mt-2 mb-0" />
+        <p className="videos-details px-1 p-sm-0 mt-1">
           {showDescr ? selectedVideo.description : ""}
         </p>
         <p
-          className="text-center pointer"
+          className="text-center pointer mt-3"
           onClick={() => setShowDescr(!showDescr)}
         >
           {showDescr ? "Hide description" : "Show description"}

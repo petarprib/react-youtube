@@ -1,46 +1,32 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import "./RecommVideos.css";
 import Moment from "react-moment";
 import { Col, Image } from "react-bootstrap";
 
 const RecommVideoItem = (props) => {
+  const { push } = useHistory();
   const { video } = props;
 
   return (
-    <Col xs={12} sm={6} md={4} lg={3} className="pointer mb-3 px-0 px-sm-3">
+    <Col xs={12} sm={6} md={4} lg={3} className="pb-3 px-0 px-sm-3">
       <Image
         src={video.thumbnailMedium}
         alt={`${video.id}`}
-        className="recomm-thumbnails"
+        className="pointer w-100"
+        onClick={() => push(`/video/${video.id}`)}
       />
-      <p className="px-1 px-sm-0">{video.title}</p>
+      <div className="pointer" onClick={() => push(`/video/${video.id}`)}>
+        <p>{video.title}</p>
+        <p className="mr-1 d-inline videos-details">
+          {parseInt(video.viewCount).toLocaleString()} views
+        </p>
+        <p className="mr-1 d-inline videos-details">•</p>
+        <Moment fromNow className="d-inline videos-details">
+          {video.publishedAt}
+        </Moment>
+      </div>
     </Col>
-
-    // <Col className="mb-3" xs={6} md={4} lg={3}>
-    //   <div
-    //     className="recommVideos"
-    //     onClick={() => props.handleVideoSelect(video)}
-    //   >
-    //     <img
-    //       src={video.thumbnailMedium}
-    //       alt={`${video.id}`}
-    //       className="recommThumbnails"
-    //     />
-    //   </div>
-    //   <div
-    //     className="recommVideos pt-2"
-    //     onClick={() => props.handleVideoSelect(video)}
-    //   >
-    //     <p className="recommVideosTitle mb-0">{video.title}</p>
-    //     <p className="recommVideosViews videosDetails mr-1">
-    //       {parseInt(video.viewCount).toLocaleString()} views
-    //     </p>
-    //     <p className="bullet videosDetails mr-1">•</p>
-    //     <Moment fromNow className="recommVideosPublished videosDetails">
-    //       {video.publishedAt}
-    //     </Moment>
-    //   </div>
-    // </Col>
   );
 };
 

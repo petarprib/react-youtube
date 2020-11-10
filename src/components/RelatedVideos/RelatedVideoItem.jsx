@@ -34,11 +34,6 @@ const RelatedVideoItem = (props) => {
         <Moment fromNow className="videos-details d-inline">
           {video.publishedAt}
         </Moment>
-        {/* <div>
-          <p className="videos-descr d-none d-sm-block d-lg-none">
-            {video.description.slice(0, 120)}
-          </p>
-        </div> */}
       </Col>
     </Row>
   );
