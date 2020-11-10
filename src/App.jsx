@@ -14,10 +14,11 @@ import SearchResultList from "./components/SearchResults/SearchResultList.jsx";
 import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
+// the keys are restricted in google cloud platform
 const API_KEY1 = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
 const API_KEY2 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
 
-const CURRENT_API_KEY = API_KEY2;
+const CURRENT_API_KEY = API_KEY1;
 const MAX_RESULTS = CURRENT_API_KEY === API_KEY1 ? 12 : 3;
 
 const DEPLOYMENT = false;
