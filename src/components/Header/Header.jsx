@@ -28,7 +28,7 @@ const SearchBar = (props) => {
   };
 
   return (
-    <Row className="header mb-2">
+    <Row className="header mb-3">
       <Col
         xs={6}
         sm={4}

@@ -5,7 +5,7 @@ const SearchHistoryList = (props) => {
   if (!props.searchHistory.length) {
     return <p>You have not searched for any videos</p>;
   } else {
-    let searchHistory = props.searchHistory.map((search, i) => (
+    const searchHistory = props.searchHistory.map((search, i) => (
       <SearchHistoryItem key={i} search={search} />
     ));
 

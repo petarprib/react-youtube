@@ -8,46 +8,48 @@ import deploymentVideos from "./deploymentVideos.json";
 import Backdrop from "./components/Backdrop/Backdrop";
 import Header from "./components/Header/Header";
 import LikedVideoList from "./components/LikedVideos/LikedVideoList.jsx";
+import RecommVideoList from "./components/RecommVideos/RecommVideoList.jsx";
 import SearchHistoryList from "./components/SearchHistory/SearchHistoryList.jsx";
 import SearchResultList from "./components/SearchResults/SearchResultList.jsx";
 import SelectedVideo from "./components/SelectedVideo/SelectedVideo.jsx";
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 
-const DEPLOYMENT = true;
-
-const API_KEY = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
+const API_KEY1 = "AIzaSyD_fyjTqPDozLCNzRk-9RDmogOF3nDR3MA";
 const API_KEY2 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
-const API_KEY3 = "AIzaSyBOWXkq4-Ufhafp87T1uSwdfleNVrb_5Ys";
+
+const CURRENT_API_KEY = API_KEY2;
+const MAX_RESULTS = CURRENT_API_KEY === API_KEY1 ? 12 : 3;
+
+const DEPLOYMENT = true;
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
+  const [recommVideos, setRecommVideos] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState({});
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [searchHistory, setSearchHistory] = useState(
     JSON.parse(localStorage.getItem("searchHistory") || "[]")
   );
-
   const [likedVideos, setLikedVideos] = useState(
     JSON.parse(localStorage.getItem("likedVideos") || "[]")
   );
   const [dislikedVideos, setDislikedVideos] = useState(
     JSON.parse(localStorage.getItem("dislikedVideos") || "[]")
   );
-  const [recommendedVideos, setRecommendedVideos] = useState([]);
 
   useEffect(() => {
     if (DEPLOYMENT === true) {
-      setRecommendedVideos(deploymentVideos);
+      setRecommVideos(deploymentVideos);
       setSearchResults(deploymentVideos);
       setSelectedVideo(deploymentVideos[0]);
       setRelatedVideos(deploymentVideos);
     } else {
-      let newRecommendedVideos = JSON.parse(
-        localStorage.getItem("recommendedVideos") || "[]"
+      let newRecommVideos = JSON.parse(
+        localStorage.getItem("recommVideos") || "[]"
       );
-      if (newRecommendedVideos.length === 12) {
-        setRecommendedVideos(newRecommendedVideos);
+      if (newRecommVideos.length === 12) {
+        setRecommVideos(newRecommVideos);
       }
     }
   }, []);
@@ -69,7 +71,7 @@ const App = () => {
 
     videos.data.forEach((video) => {
       fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${API_KEY2}`
+        `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${video.id.videoId}&key=${CURRENT_API_KEY}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -87,16 +89,16 @@ const App = () => {
             viewCount: data.items[0].statistics.viewCount,
           });
 
-          // prevents adding same video into recommendedVideos more than once
+          // prevents adding same video into recommVideos more than once
           if (newVideos.length === 2) {
-            let recommendedVideos = JSON.parse(
-              localStorage.getItem("recommendedVideos") || "[]"
+            let recommVideos = JSON.parse(
+              localStorage.getItem("recommVideos") || "[]"
             );
 
             let match = false;
-            for (let i = 0; i < recommendedVideos.length; i++) {
+            for (let i = 0; i < recommVideos.length; i++) {
               for (let j = 0; j < newVideos.length; j++) {
-                if (recommendedVideos[i].id === newVideos[j].id) {
+                if (recommVideos[i].id === newVideos[j].id) {
                   match = true;
                   break;
                 }
@@ -104,15 +106,15 @@ const App = () => {
               if (match) break;
             }
 
-            // adds video to recommendedVideos
+            // adds video to recommVideos
             if (!match) {
-              if (recommendedVideos.length === 12) {
-                recommendedVideos.splice(0, 2);
+              if (recommVideos.length === 12) {
+                recommVideos.splice(0, 2);
               }
-              recommendedVideos.push(...newVideos);
+              recommVideos.push(...newVideos);
               localStorage.setItem(
-                "recommendedVideos",
-                JSON.stringify(recommendedVideos)
+                "recommVideos",
+                JSON.stringify(recommVideos)
               );
             }
           }
@@ -129,8 +131,12 @@ const App = () => {
   };
 
   let handleSearch = (searchTerm) => {
+    setSearchResults([]);
+    setSelectedVideo({});
+    setRelatedVideos([]);
+
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=3&part=snippet&key=${API_KEY2}`
+      `https://www.googleapis.com/youtube/v3/search?q=${searchTerm}&type=video&order=relevance&maxResults=${MAX_RESULTS}&part=snippet&key=${CURRENT_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -140,7 +146,7 @@ const App = () => {
 
   let handleVideoSelect = (videoId) => {
     fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${API_KEY2}`
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${CURRENT_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -166,7 +172,7 @@ const App = () => {
 
   let fetchRelatedVideos = (videoId) => {
     fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=3&key=${API_KEY2}`
+      `https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${videoId}&type=video&order=relevance&maxResults=${MAX_RESULTS}&key=${CURRENT_API_KEY}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -289,6 +295,11 @@ const App = () => {
           handleSearchHistory={(searchTerm) => handleSearchHistory(searchTerm)}
         />
         <Switch>
+          <Route
+            path="/"
+            exact
+            render={() => <RecommVideoList recommVideos={recommVideos} />}
+          />
           <Route
             path="/liked-videos"
             render={() => <LikedVideoList likedVideos={likedVideos} />}

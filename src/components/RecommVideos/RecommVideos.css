@@ -1,0 +1,11 @@
+.recomm-thumbnails {
+    width: 100%;
+}
+
+.recomm-videos-title, .recomm-videos-views, .recomm-videos-published, .bullet {
+    font-size: 0.8rem;
+}
+
+.recomm-videos-title {
+    font-weight: bold;
+}

@@ -7,6 +7,12 @@
     margin-right: 10px;
 }
 
+#search-button {
+    width: 60px;
+    border-color: #696969;
+    background-color: #696969;
+}
+
 @media (max-width: 575.98px) {
     #searchbar {
         padding-left: 0;

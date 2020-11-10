@@ -7,11 +7,10 @@ const RelatedVideoList = (props) => {
   ));
 
   return (
-    <div>
+    <>
       <h6>Related videos</h6>
-      <hr className="mt-3 mb-3" />
-      <div className="video-list">{relatedVideos}</div>
-    </div>
+      <div className="mt-3">{relatedVideos}</div>
+    </>
   );
 };
 

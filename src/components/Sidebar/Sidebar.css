@@ -13,10 +13,6 @@
     padding-left: 15px !important;
 }
 
-/* if you arent using any sort of react animation library like react-spring, you can set the default styles to opacity: 0; transition: opacity .25s ease-in-out;, and then when you trigger the sidebar to open, you can also add a class to the backdrop which has style: opacity: 0.3;  */
-
-/* just setting the opacity is not going to provide any "animation" or "transition" like you described. you have to provide some mechanism to tell your component to transition from one state (opacity: 0) to another state (opacity: 0.3 (or whatever value)).  */
-
 .nav-menu.active {
     left: 0;
     transition: 350ms;

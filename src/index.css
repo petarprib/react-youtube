@@ -1,31 +1,26 @@
+h1, p {
+  margin: 0 !important;
+}
+
 .ytlogo {
   width: 100px;
 }
 
-.video-list {
-  padding-left: 15px;
-  padding-right: 15px;
+.videos-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.videos-details {
+  font-size: 0.8rem;
+  color: #606060;
+}
+
+.videos-descr {
+  font-size: 0.8rem;
+  color: #606060;
 }
 
 .pointer {
   cursor: pointer;
-}
-
-#search-button {
-  width: 60px;
-  border-color: #696969;
-  background-color: #696969;
-}
-
-.recomm-vids-details {
-  min-height: 100px;
-}
-
-#select-video-title {
-  font-size: 1rem;
-}
-
-.select-video-details {
-  font-size: 0.9rem;
-  color: #606060;
 }

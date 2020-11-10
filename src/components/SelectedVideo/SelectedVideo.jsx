@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import "./SelectedVideo.css";
 import { Row, Col } from "react-bootstrap";
@@ -8,6 +8,7 @@ import RelatedVideoList from "../RelatedVideos/RelatedVideoList.jsx";
 const SelectedVideo = (props) => {
   const { videoId } = useParams();
   const { selectedVideo, relatedVideos, likedVideos, dislikedVideos } = props;
+  const [showDescr, setShowDescr] = useState(false);
 
   let likeCount = parseInt(selectedVideo.likeCount);
   let likeColor = "#606060";
@@ -35,64 +36,78 @@ const SelectedVideo = (props) => {
   }, [videoId]);
 
   return (
-    <div>
-      <div className="embed-responsive embed-responsive-16by9 mb-2">
-        <iframe
-          title={selectedVideo.title}
-          src={`https://www.youtube.com/embed/${selectedVideo.id}`}
-          frameBorder="0"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      </div>
-      <h1 id="select-video-title">{selectedVideo.title}</h1>
-      <Row>
-        <Col>
-          <p className="select-video-details d-inline mr-1">
-            {parseInt(selectedVideo.viewCount).toLocaleString()} views
-          </p>
-          <p className="select-video-details d-inline mr-1">•</p>
-          <Moment
-            format="MMM DD, YYYY"
-            className="select-video-details d-inline"
-          >
-            {selectedVideo.publishedAt}
-          </Moment>
-        </Col>
-        <Col className="text-right">
-          <i
-            className="fas fa-thumbs-up mr-1 d-inline"
-            style={{ color: likeColor }}
-            onClick={() => props.handleLike(selectedVideo)}
-          ></i>
-          <p className="mr-3 d-inline select-video-details">
-            {Math.abs(likeCount) > 999
-              ? `${
-                  Math.sign(likeCount) * (Math.abs(likeCount) / 1000).toFixed(1)
-                }K`
-              : Math.sign(likeCount) * Math.abs(likeCount)}
-          </p>
-          <i
-            className="fas fa-thumbs-down mr-1 d-inline"
-            style={{ color: dislikeColor }}
-            onClick={() => props.handleDislike(selectedVideo)}
-          ></i>
-          <p className="d-inline select-video-details">
-            {Math.abs(dislikeCount) > 999
-              ? `${
-                  Math.sign(dislikeCount) *
-                  (Math.abs(dislikeCount) / 1000).toFixed(1)
-                }K`
-              : Math.sign(dislikeCount) * Math.abs(dislikeCount)}
-          </p>
-        </Col>
-      </Row>
-      <hr className="mt-2 mb-2" />
-      {selectedVideo.description}
-      <div>
+    <Row>
+      <Col xs={12} lg={9} className="px-0 px-sm-3">
+        <div className="embed-responsive embed-responsive-16by9 mb-1">
+          <iframe
+            title={selectedVideo.title}
+            src={`https://www.youtube.com/embed/${selectedVideo.id}`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+        <h1 id="selected-video-title" className="mb-0 px-1 px-sm-0">
+          {selectedVideo.title}
+        </h1>
+        <Row className="px-1 px-sm-0">
+          <Col xs={6} className="pr-0">
+            <p className="selected-video-details d-inline pr-1">
+              {parseInt(selectedVideo.viewCount).toLocaleString()} views
+            </p>
+            <p className="selected-video-details d-inline pr-1">•</p>
+            <Moment
+              format="MMM DD, YYYY"
+              className="selected-video-details d-inline"
+            >
+              {selectedVideo.publishedAt}
+            </Moment>
+          </Col>
+          <Col xs={6} className="text-right pl-0">
+            <i
+              className="fas fa-thumbs-up d-inline pr-1"
+              style={{ color: likeColor }}
+              onClick={() => props.handleLike(selectedVideo)}
+            ></i>
+            <p className="d-inline selected-video-details pr-3">
+              {Math.abs(likeCount) > 999
+                ? `${
+                    Math.sign(likeCount) *
+                    (Math.abs(likeCount) / 1000).toFixed(1)
+                  }K`
+                : Math.sign(likeCount) * Math.abs(likeCount)}
+            </p>
+            <i
+              className="fas fa-thumbs-down d-inline pr-1"
+              style={{ color: dislikeColor }}
+              onClick={() => props.handleDislike(selectedVideo)}
+            ></i>
+            <p className="d-inline selected-video-details">
+              {Math.abs(dislikeCount) > 999
+                ? `${
+                    Math.sign(dislikeCount) *
+                    (Math.abs(dislikeCount) / 1000).toFixed(1)
+                  }K`
+                : Math.sign(dislikeCount) * Math.abs(dislikeCount)}
+            </p>
+          </Col>
+        </Row>
+        <hr className="mt-2" />
+        <p className="video-descr px-1 p-sm-0">
+          {showDescr ? selectedVideo.description : ""}
+        </p>
+        <p
+          className="text-center pointer"
+          onClick={() => setShowDescr(!showDescr)}
+        >
+          {showDescr ? "Hide description" : "Show description"}
+        </p>
+        <hr className="mt-3" />
+      </Col>
+      <Col xs={12} lg={3} className="pl-lg-0">
         <RelatedVideoList relatedVideos={relatedVideos} />
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
