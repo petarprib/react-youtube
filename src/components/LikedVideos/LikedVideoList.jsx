@@ -5,7 +5,7 @@ const LikedVideoList = (props) => {
   if (!props.likedVideos.length) {
     return <p>You have not liked any videos</p>;
   } else {
-    let likedVideos = props.likedVideos.reverse().map((video, i) => {
+    let likedVideos = props.likedVideos.map((video, i) => {
       return (
         <LikedVideoItem
           key={i}
@@ -16,10 +16,10 @@ const LikedVideoList = (props) => {
     });
 
     return (
-      <div>
-        <h1>Liked videos</h1>
-        {likedVideos}
-      </div>
+      <>
+        <h6>Liked videos</h6>
+        <div className="mt-3">{likedVideos.reverse()}</div>
+      </>
     );
   }
 };

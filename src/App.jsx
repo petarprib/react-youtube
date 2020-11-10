@@ -20,7 +20,7 @@ const API_KEY2 = "AIzaSyBrNg1dKJqHJXL2cYim09HfUF3WJZjKmfc";
 const CURRENT_API_KEY = API_KEY2;
 const MAX_RESULTS = CURRENT_API_KEY === API_KEY1 ? 12 : 3;
 
-const DEPLOYMENT = true;
+const DEPLOYMENT = false;
 
 const App = () => {
   const [sidebar, setSidebar] = useState(false);
@@ -58,10 +58,19 @@ const App = () => {
 
   let handleSearchHistory = (searchTerm) => {
     let newSearchHistory = searchHistory;
+
+    for (let i = 0; i < searchHistory.length; i++) {
+      if (searchHistory[i].searchTerm === searchTerm) {
+        newSearchHistory.splice(i, 1);
+        break;
+      }
+    }
+
     newSearchHistory.push({
       searchTerm,
       time: moment().format(),
     });
+
     localStorage.setItem("searchHistory", JSON.stringify(newSearchHistory));
     setSearchHistory(newSearchHistory);
   };
@@ -159,9 +168,9 @@ const App = () => {
           id: videoId,
           likeCount: data.items[0].statistics.likeCount,
           publishedAt: data.items[0].snippet.publishedAt,
-          thumbnailDefault: data.items[0].snippet.thumbnails.default,
-          thumbnailHigh: data.items[0].snippet.thumbnails.high,
-          thumbnailMedium: data.items[0].snippet.thumbnails.medium,
+          thumbnailDefault: data.items[0].snippet.thumbnails.default.url,
+          thumbnailHigh: data.items[0].snippet.thumbnails.high.url,
+          thumbnailMedium: data.items[0].snippet.thumbnails.medium.url,
           title: data.items[0].snippet.title,
           viewCount: data.items[0].statistics.viewCount,
         });

@@ -93,15 +93,21 @@ const SelectedVideo = (props) => {
           </Col>
         </Row>
         <hr className="mt-2 mb-0" />
-        <p className="videos-details px-1 p-sm-0 mt-1">
+
+        <p
+          className={
+            showDescr
+              ? "selected-video-details px-1 px-sm-0 mt-1"
+              : "selected-video-details px-1 px-sm-0"
+          }
+        >
           {showDescr ? selectedVideo.description : ""}
         </p>
-        <p
-          className="text-center pointer mt-3"
-          onClick={() => setShowDescr(!showDescr)}
-        >
-          {showDescr ? "Hide description" : "Show description"}
-        </p>
+        <div className="d-flex justify-content-center">
+          <p className="pointer mt-3" onClick={() => setShowDescr(!showDescr)}>
+            {showDescr ? "Hide description" : "Show description"}
+          </p>
+        </div>
         <hr className="mt-3" />
       </Col>
       <Col xs={12} lg={3} className="pl-lg-0">

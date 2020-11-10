@@ -10,10 +10,10 @@ const SearchHistoryList = (props) => {
     ));
 
     return (
-      <div>
-        <h1>Search history</h1>
-        {searchHistory.reverse()}
-      </div>
+      <>
+        <h6>Search history</h6>
+        <div className="mt-3">{searchHistory.reverse()}</div>
+      </>
     );
   }
 };

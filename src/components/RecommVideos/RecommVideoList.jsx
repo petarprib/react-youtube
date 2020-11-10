@@ -16,8 +16,8 @@ const RecommVideoList = (props) => {
 
   return (
     <>
-      <h6 className="mb-3">Recommended videos</h6>
-      <Row>{recommVideos}</Row>
+      <h6>Recommended videos</h6>
+      <Row className="mt-3">{recommVideos}</Row>
     </>
   );
 };
