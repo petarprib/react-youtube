@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import "./RecommVideos.css";
 import Moment from "react-moment";
 import { Col, Image } from "react-bootstrap";
 

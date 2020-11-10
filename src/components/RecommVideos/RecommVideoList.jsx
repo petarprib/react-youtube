@@ -1,5 +1,4 @@
 import React from "react";
-import "./RecommVideos.css";
 import RecommVideoItem from "./RecommVideoItem.jsx";
 import { Row } from "react-bootstrap";
 
@@ -14,9 +13,14 @@ const RecommVideoList = (props) => {
     <RecommVideoItem key={i} video={video} />
   ));
 
+  let info = !recommVideos.length
+    ? "You will have to perform 6 different searches before recommended videos display on your homepage"
+    : "";
+
   return (
     <>
       <h6>Recommended videos</h6>
+      <p className="mt-3 text-center">{info}</p>
       <Row className="mt-3">{recommVideos}</Row>
     </>
   );
