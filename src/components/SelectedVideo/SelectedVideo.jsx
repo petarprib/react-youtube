@@ -51,7 +51,7 @@ const SelectedVideo = (props) => {
           {selectedVideo.title}
         </h1>
         <Row className="px-1 px-sm-0">
-          <Col xs={6} className="pr-0">
+          <Col xs={7} className="pr-0">
             <p className="selected-video-details d-inline pr-1">
               {parseInt(selectedVideo.viewCount).toLocaleString()} views
             </p>
@@ -63,7 +63,7 @@ const SelectedVideo = (props) => {
               {selectedVideo.publishedAt}
             </Moment>
           </Col>
-          <Col xs={6} className="text-right pl-0">
+          <Col xs={5} className="text-right pl-0">
             <i
               className="fas fa-thumbs-up d-inline pr-1"
               style={{ color: likeColor }}
