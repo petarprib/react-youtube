@@ -6,13 +6,13 @@ It contains most basic functionalities. Some improvements and features might be 
 
 The layout and design are perhaps undesirably Bootstrap-heavy since I wanted to spend more time and effort on the JavaScript/React side of things, but I will have more complete and CSS-dominant projects in the future.
 
-## CodeSandbox demo
+## Demos
+
+### [CodeSandbox demo](https://codesandbox.io/s/youtube-react-bslnn)
 
 NB It is not recommended to open it in an incognito window. If you do, make sure your incognito mode allows third-party cookies.
 
-[https://codesandbox.io/s/youtube-react-bslnn](https://codesandbox.io/s/youtube-react-bslnn)
-
-## If cloned...
+### If cloned...
 
 ### `npm install`
 
