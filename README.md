@@ -4,7 +4,7 @@ A video-sharing platform made with CSS, React-Bootstrap and React with the use o
 
 It contains most basic functionalities. Some improvements and features might be added over time.
 
-The layout and design are perhaps undesirably Bootstrap-heavy since I wanted to spend more time and effort on the JavaScript/React side of things, but I will have more complete and CSS-dominant projects in the future.
+The layout and design are perhaps undesirably Bootstrap-heavy since I wanted to spend more time and effort on the JavaScript/React side of things, but I will have more complete and CSS-dominant projects in the future, such as the [Restaurant](https://github.com/petarprib/restaurant) repository.
 
 ## Demos
 
